@@ -334,27 +334,86 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-br from-emerald-600 to-teal-600">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6" style={{ fontFamily: 'var(--font-nunito)' }}>
-            Bergabung Bersama Kami
-          </h2>
-          <p className="text-lg text-emerald-100 mb-10 max-w-2xl mx-auto">
-            Jadilah bagian dari gerakan Indonesia Bebas Stunting 2045. Daftarkan Posyandu Anda dan mulai pantau tumbuh kembang anak dengan teknologi terkini.
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Link href="/dashboard">
-              <Button size="lg" className="bg-white text-emerald-700 hover:bg-emerald-50 shadow-xl">
-                Daftar Posyandu
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-            </Link>
-            <Link href="/beranda">
-              <Button variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10">
-                Pelajari Lebih Lanjut
-              </Button>
-            </Link>
+      {/* CTA Section - Compact Pop-Out Card */}
+      <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 bg-stone-100 overflow-visible">
+        <div className="max-w-6xl mx-auto px-6">
+          {/* Floating Card Container */}
+          <div className="relative">
+            {/* The Card */}
+            <div className="relative bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl min-h-[320px] md:min-h-[380px]">
+              {/* Inner Glow Effects */}
+              <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl" />
+              <div className="absolute bottom-0 left-1/2 w-60 h-60 bg-teal-500/10 rounded-full blur-3xl" />
+
+              <div className="relative grid lg:grid-cols-2 gap-8 items-center">
+                {/* Left: Text Content */}
+                <div className="p-8 md:p-12 lg:p-16">
+                  {/* Badge */}
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-6 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-xs font-medium text-emerald-400">12,000+ Posyandu Terdaftar</span>
+                  </div>
+
+                  {/* Headline */}
+                  <h2 
+                    className="text-3xl md:text-4xl lg:text-5xl font-bold leading-[1.1] mb-5"
+                    style={{ fontFamily: 'var(--font-nunito)' }}
+                  >
+                    <span className="text-white">Mulai Pantau</span>
+                    <br />
+                    <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">Sekarang.</span>
+                  </h2>
+
+                  {/* Subtext */}
+                  <p className="text-slate-400 text-sm md:text-base max-w-sm mb-8 leading-relaxed">
+                    Bergabung dengan ribuan Posyandu yang telah menggunakan teknologi AI untuk memantau tumbuh kembang anak.
+                  </p>
+
+                  {/* CTA Buttons */}
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Link href="/dashboard">
+                      <button className="group h-12 md:h-14 px-6 md:px-8 rounded-full bg-white text-emerald-900 font-semibold text-sm md:text-base shadow-xl hover:bg-emerald-50 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2">
+                        Daftar Gratis
+                        <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
+                      </button>
+                    </Link>
+                    <Link href="/beranda">
+                      <button className="h-12 md:h-14 px-5 md:px-6 rounded-full border border-slate-600 text-slate-300 font-medium text-sm md:text-base hover:bg-slate-800 hover:border-slate-500 transition-all">
+                        Lihat Demo
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Right: Spacer for doctor */}
+                <div className="hidden lg:block" />
+              </div>
+            </div>
+
+            {/* Doctor Image - OUTSIDE card, positioned absolutely to pop-out */}
+            <div className="hidden lg:flex absolute right-4 bottom-0 z-20 h-full items-end pointer-events-none">
+              {/* Backlight Glow */}
+              <div className="absolute bottom-0 right-20 w-80 h-[120%] bg-gradient-to-t from-cyan-500/20 via-teal-500/10 to-transparent blur-3xl -z-10" />
+              
+              {/* Doctor - Giant Pop Out Effect */}
+              <img 
+                src="/doctor.png" 
+                alt="Dokter Profesional" 
+                className="relative h-[125%] w-auto object-contain object-bottom drop-shadow-2xl"
+              />
+            </div>
+
+            {/* Mobile Doctor - Below Card */}
+            <div className="lg:hidden flex justify-center -mt-6 relative z-10">
+              <div className="relative">
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-40 h-60 bg-gradient-to-t from-emerald-500/20 to-transparent blur-2xl" />
+                <img 
+                  src="/doctor.png" 
+                  alt="Dokter Profesional" 
+                  className="h-[280px] object-contain drop-shadow-xl"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>
