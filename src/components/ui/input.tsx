@@ -5,42 +5,47 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   hint?: string;
+  icon?: React.ReactNode;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, label, error, hint, type = "text", id, ...props }, ref) => {
+  ({ className, label, error, hint, icon, type = "text", id, ...props }, ref) => {
     const inputId = id || React.useId();
 
     return (
       <div className="w-full">
         {label && (
-          <label htmlFor={inputId} className="mb-1.5 block text-sm font-medium text-gray-700">
+          <label htmlFor={inputId} className="block text-sm font-medium text-stone-600 mb-2">
             {label}
           </label>
         )}
-        <input
-          id={inputId}
-          type={type}
-          className={cn(
-            "flex h-10 w-full rounded-lg border bg-white px-3 py-2 text-sm transition-colors",
-            "placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-0",
-            error
-              ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-              : "border-gray-300 focus:border-blue-500 focus:ring-blue-500/20",
-            "disabled:cursor-not-allowed disabled:bg-gray-50 disabled:opacity-50",
-            className
+        <div className="relative">
+          {icon && (
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400">
+              {icon}
+            </div>
           )}
-          ref={ref}
-          aria-invalid={error ? "true" : "false"}
-          aria-describedby={error ? `${inputId}-error` : undefined}
-          {...props}
-        />
-        {error && (
-          <p id={`${inputId}-error`} className="mt-1.5 text-sm text-red-600">
-            {error}
-          </p>
-        )}
-        {hint && !error && <p className="mt-1.5 text-sm text-gray-500">{hint}</p>}
+          <input
+            id={inputId}
+            type={type}
+            className={cn(
+              "w-full h-12 rounded-2xl border bg-stone-50/50 text-sm transition-all",
+              "placeholder:text-stone-400",
+              "focus:outline-none focus:ring-2 focus:ring-offset-0",
+              icon ? "pl-11 pr-4" : "px-4",
+              error
+                ? "border-rose-300 focus:border-rose-400 focus:ring-rose-200"
+                : "border-stone-200 focus:border-amber-400 focus:ring-amber-200",
+              "disabled:cursor-not-allowed disabled:bg-stone-100 disabled:opacity-50",
+              className
+            )}
+            ref={ref}
+            aria-invalid={error ? "true" : "false"}
+            {...props}
+          />
+        </div>
+        {error && <p className="mt-2 text-sm text-rose-500">{error}</p>}
+        {hint && !error && <p className="mt-2 text-sm text-stone-400">{hint}</p>}
       </div>
     );
   }

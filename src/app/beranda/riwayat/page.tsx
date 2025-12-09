@@ -1,4 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
+"use client";
+
+import { TrendingUp, BarChart3 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, Button, StatusBadge } from "@/components/ui";
 
 const riwayat = [
   { tanggal: "9 Des 2024", umur: "18 bulan", bb: 10.2, tb: 78, lk: 44, lila: 13, status: "kuning" },
@@ -9,38 +12,29 @@ const riwayat = [
   { tanggal: "9 Jul 2024", umur: "13 bulan", bb: 8.5, tb: 68, lk: 41.5, lila: 11.8, status: "normal" },
 ];
 
-function StatusBadge({ status }: { status: string }) {
-  const colors: Record<string, string> = {
-    normal: "bg-green-100 text-green-700",
-    kuning: "bg-yellow-100 text-yellow-700",
-    merah: "bg-red-100 text-red-700",
-  };
-  return (
-    <span className={`px-2 py-1 rounded-full text-xs font-medium ${colors[status]}`}>
-      {status === "normal" ? "Normal" : status === "kuning" ? "Perlu Perhatian" : "Berisiko"}
-    </span>
-  );
-}
-
 export default function RiwayatPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">Riwayat Tumbuh Kembang</h2>
-        <p className="text-gray-500">Pantau perkembangan anak dari waktu ke waktu</p>
+        <h1 className="text-2xl font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>Riwayat Pertumbuhan</h1>
+        <p className="text-stone-500 mt-1">Pantau perkembangan si kecil dari waktu ke waktu</p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Grafik Pertumbuhan</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>Grafik Pertumbuhan</CardTitle>
+            <div className="flex gap-2">
+              <Button variant="success" size="sm">Berat Badan</Button>
+              <Button variant="outline" size="sm">Tinggi Badan</Button>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+          <div className="h-64 flex items-center justify-center bg-gradient-to-br from-stone-50 to-stone-100 rounded-2xl border-2 border-dashed border-stone-200">
             <div className="text-center">
-              <svg className="w-12 h-12 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-              <p className="text-gray-500">Grafik akan muncul setelah integrasi API</p>
+              <BarChart3 className="w-12 h-12 text-stone-300 mx-auto mb-3" />
+              <p className="text-stone-400 font-medium">Grafik akan ditampilkan setelah integrasi API</p>
             </div>
           </div>
         </CardContent>
@@ -54,26 +48,33 @@ export default function RiwayatPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">Tanggal</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">Umur</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">BB (kg)</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">TB (cm)</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">LK (cm)</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">LILA (cm)</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">Status</th>
+                <tr className="border-b border-stone-100">
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-stone-500">Tanggal</th>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-stone-500">Umur</th>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-stone-500">BB (kg)</th>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-stone-500">TB (cm)</th>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-stone-500">LK (cm)</th>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-stone-500">LILA (cm)</th>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-stone-500">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {riwayat.map((r, i) => (
-                  <tr key={i} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="py-3 px-4 text-sm font-medium text-gray-900">{r.tanggal}</td>
-                    <td className="py-3 px-4 text-sm text-gray-600">{r.umur}</td>
-                    <td className="py-3 px-4 text-sm text-gray-600">{r.bb}</td>
-                    <td className="py-3 px-4 text-sm text-gray-600">{r.tb}</td>
-                    <td className="py-3 px-4 text-sm text-gray-600">{r.lk}</td>
-                    <td className="py-3 px-4 text-sm text-gray-600">{r.lila}</td>
-                    <td className="py-3 px-4"><StatusBadge status={r.status} /></td>
+                  <tr key={i} className="border-b border-stone-50 hover:bg-stone-50/50 transition-colors">
+                    <td className="py-4 px-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center shadow-md">
+                          <TrendingUp className="w-4 h-4 text-white" />
+                        </div>
+                        <span className="font-semibold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>{r.tanggal}</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4 text-sm text-stone-600">{r.umur}</td>
+                    <td className="py-4 px-4 text-sm text-stone-600">{r.bb}</td>
+                    <td className="py-4 px-4 text-sm text-stone-600">{r.tb}</td>
+                    <td className="py-4 px-4 text-sm text-stone-600">{r.lk}</td>
+                    <td className="py-4 px-4 text-sm text-stone-600">{r.lila}</td>
+                    <td className="py-4 px-4"><StatusBadge status={r.status} /></td>
                   </tr>
                 ))}
               </tbody>

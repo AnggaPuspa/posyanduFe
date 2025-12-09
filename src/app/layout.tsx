@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Nunito, Inter } from "next/font/google";
 import "./globals.css";
+
+const nunito = Nunito({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-nunito",
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -9,8 +16,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Posyandu App",
-  description: "Aplikasi Posyandu",
+  title: "Posyandu Pintar",
+  description: "Sistem Informasi Posyandu Digital",
 };
 
 export default function RootLayout({
@@ -19,8 +26,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={inter.variable}>
-      <body className="min-h-screen bg-gray-50 font-sans antialiased">{children}</body>
+    <html lang="id" className={`${nunito.variable} ${inter.variable}`}>
+      <body className="min-h-screen bg-stone-50 font-sans antialiased">{children}</body>
     </html>
   );
 }

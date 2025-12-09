@@ -1,10 +1,13 @@
-import { Card, CardContent, CardHeader, CardTitle, Button } from "@/components/ui";
+"use client";
+
+import { Calendar, MapPin, Clock, Bell, CheckCircle2 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from "@/components/ui";
 
 const jadwalPosyandu = [
   {
     tanggal: "9 Januari 2025",
     hari: "Kamis",
-    waktu: "08:00 - 12:00 WIB",
+    waktu: "08:00 - 12:00",
     lokasi: "Posyandu Melati",
     alamat: "Jl. Melati No. 15, RT 05/RW 02",
     kegiatan: ["Penimbangan", "Pengukuran TB", "Imunisasi", "PMT"],
@@ -13,7 +16,7 @@ const jadwalPosyandu = [
   {
     tanggal: "9 Desember 2024",
     hari: "Senin",
-    waktu: "08:00 - 12:00 WIB",
+    waktu: "08:00 - 12:00",
     lokasi: "Posyandu Melati",
     alamat: "Jl. Melati No. 15, RT 05/RW 02",
     kegiatan: ["Penimbangan", "Pengukuran TB"],
@@ -22,7 +25,7 @@ const jadwalPosyandu = [
   {
     tanggal: "9 November 2024",
     hari: "Sabtu",
-    waktu: "08:00 - 12:00 WIB",
+    waktu: "08:00 - 12:00",
     lokasi: "Posyandu Melati",
     alamat: "Jl. Melati No. 15, RT 05/RW 02",
     kegiatan: ["Penimbangan", "Pengukuran TB", "Vitamin A"],
@@ -31,73 +34,80 @@ const jadwalPosyandu = [
 ];
 
 export default function JadwalPage() {
+  const nextJadwal = jadwalPosyandu[0];
+
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">Jadwal Posyandu</h2>
-        <p className="text-gray-500">Lihat jadwal posyandu yang akan datang</p>
+        <h1 className="text-2xl font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>Jadwal Posyandu</h1>
+        <p className="text-stone-500 mt-1">Lihat jadwal dan riwayat kunjungan Posyandu</p>
       </div>
 
-      <Card className="border-green-200 bg-green-50">
-        <CardContent className="p-6">
-          <div className="flex items-center gap-4">
-            <div className="h-16 w-16 rounded-full bg-green-600 flex items-center justify-center">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
+      <Card className="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 border-0" hover={false}>
+        <CardContent className="p-6 text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-5">
+              <div className="h-16 w-16 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center">
+                <Calendar className="w-8 h-8" />
+              </div>
+              <div>
+                <p className="text-white/80 text-sm font-medium">Jadwal Berikutnya</p>
+                <p className="text-2xl font-bold mt-1" style={{ fontFamily: 'var(--font-nunito)' }}>{nextJadwal.tanggal}</p>
+                <p className="text-white/80 text-sm mt-1">{nextJadwal.hari} • {nextJadwal.waktu} WIB</p>
+              </div>
             </div>
-            <div className="flex-1">
-              <p className="text-sm text-green-600 font-medium">Jadwal Berikutnya</p>
-              <p className="text-2xl font-bold text-green-800">9 Januari 2025</p>
-              <p className="text-green-700">Kamis, 08:00 - 12:00 WIB</p>
-            </div>
-            <Button className="bg-green-600 hover:bg-green-700">
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
+            <Button variant="outline" className="bg-white/20 backdrop-blur border-white/30 text-white hover:bg-white/30">
+              <Bell className="w-5 h-5 mr-2" />
               Ingatkan Saya
             </Button>
           </div>
         </CardContent>
       </Card>
 
-      <div className="space-y-4">
-        {jadwalPosyandu.map((j, i) => (
-          <Card key={i} className={j.status === "done" ? "opacity-60" : ""}>
-            <CardContent className="p-6">
-              <div className="flex flex-col md:flex-row md:items-center gap-4">
-                <div className="flex items-center gap-4 flex-1">
-                  <div className={`h-12 w-12 rounded-lg flex items-center justify-center ${j.status === "upcoming" ? "bg-green-100" : "bg-gray-100"}`}>
-                    <svg className={`w-6 h-6 ${j.status === "upcoming" ? "text-green-600" : "text-gray-400"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
+      <Card>
+        <CardHeader>
+          <CardTitle>Riwayat Jadwal</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {jadwalPosyandu.map((j, i) => (
+              <div key={i} className={`p-5 rounded-2xl border transition-all ${j.status === 'upcoming' ? 'bg-emerald-50 border-emerald-200' : 'bg-stone-50/50 border-stone-200/60 opacity-70'}`}>
+                <div className="flex flex-col md:flex-row md:items-center gap-4">
+                  <div className="flex items-center gap-4 flex-1">
+                    <div className={`h-12 w-12 rounded-2xl flex items-center justify-center ${j.status === 'upcoming' ? 'bg-gradient-to-br from-emerald-400 to-teal-500 shadow-lg shadow-emerald-200' : 'bg-stone-200'}`}>
+                      <Calendar className={`w-5 h-5 ${j.status === 'upcoming' ? 'text-white' : 'text-stone-400'}`} />
+                    </div>
+                    <div>
+                      <p className="font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>{j.tanggal}</p>
+                      <div className="flex items-center gap-3 text-sm text-stone-500 mt-1">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5" />
+                          {j.waktu}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <MapPin className="w-3.5 h-3.5" />
+                          {j.lokasi}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">{j.tanggal}</p>
-                    <p className="text-sm text-gray-500">{j.hari}, {j.waktu}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {j.kegiatan.map((k, ki) => (
+                      <Badge key={ki} variant="neutral">{k}</Badge>
+                    ))}
                   </div>
+                  {j.status === 'done' && (
+                    <Badge variant="success" className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4" />
+                      Selesai
+                    </Badge>
+                  )}
                 </div>
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900">{j.lokasi}</p>
-                  <p className="text-sm text-gray-500">{j.alamat}</p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {j.kegiatan.map((k, ki) => (
-                    <span key={ki} className="px-2 py-1 rounded-full bg-gray-100 text-xs text-gray-600">
-                      {k}
-                    </span>
-                  ))}
-                </div>
-                {j.status === "done" && (
-                  <span className="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-500">
-                    Selesai
-                  </span>
-                )}
               </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

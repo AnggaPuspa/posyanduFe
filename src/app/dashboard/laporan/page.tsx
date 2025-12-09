@@ -1,58 +1,89 @@
-import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
+"use client";
 
-const ringkasanBulanan = {
+import { FileSpreadsheet, FileText, Download, BarChart3, TrendingUp, Baby } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from "@/components/ui";
+
+const ringkasan = {
   bulan: "Desember 2024",
   total_pemeriksaan: 89,
-  anak_baru: 5,
-  status: {
-    normal: 72,
-    perlu_perhatian: 12,
-    berisiko: 5,
-  },
+  balita_baru: 5,
+  kunjungan: { sekarang: 89, sebelumnya: 77 },
+  status: { normal: 142, perlu_perhatian: 18, berisiko: 8 },
 };
 
+const eksporList = [
+  { nama: "Laporan Bulanan", format: "Excel (.xlsx)", icon: FileSpreadsheet, warna: "from-emerald-400 to-teal-500", shadow: "shadow-emerald-200" },
+  { nama: "Rekap Pemeriksaan", format: "PDF", icon: FileText, warna: "from-rose-400 to-red-500", shadow: "shadow-rose-200" },
+  { nama: "Data Mentah", format: "CSV", icon: Download, warna: "from-sky-400 to-blue-500", shadow: "shadow-sky-200" },
+];
+
 export default function LaporanPage() {
+  const pertumbuhanPersen = Math.round(((ringkasan.kunjungan.sekarang - ringkasan.kunjungan.sebelumnya) / ringkasan.kunjungan.sebelumnya) * 100);
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Laporan</h2>
-          <p className="text-gray-500">Unduh dan lihat laporan Posyandu</p>
-        </div>
+      <div>
+        <h1 className="text-2xl font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>Laporan</h1>
+        <p className="text-stone-500 mt-1">Ringkasan data dan ekspor laporan Posyandu</p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
+      <div className="grid gap-5 lg:grid-cols-3">
+        <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Ringkasan Bulan Ini</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle>Ringkasan {ringkasan.bulan}</CardTitle>
+              <Badge variant="neutral">Periode Aktif</Badge>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
-                <span className="text-gray-600">Periode</span>
-                <span className="font-medium text-gray-900">{ringkasanBulanan.bulan}</span>
-              </div>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
-                <span className="text-gray-600">Total Pemeriksaan</span>
-                <span className="font-medium text-gray-900">{ringkasanBulanan.total_pemeriksaan}</span>
-              </div>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
-                <span className="text-gray-600">Anak Baru Terdaftar</span>
-                <span className="font-medium text-gray-900">{ringkasanBulanan.anak_baru}</span>
-              </div>
-              <div className="grid grid-cols-3 gap-3 pt-2">
-                <div className="text-center p-3 rounded-lg bg-green-50">
-                  <p className="text-2xl font-bold text-green-700">{ringkasanBulanan.status.normal}</p>
-                  <p className="text-xs text-green-600">Normal</p>
+            <div className="grid gap-4 md:grid-cols-3 mb-6">
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-100">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center shadow-lg shadow-sky-200">
+                    <BarChart3 className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>{ringkasan.total_pemeriksaan}</p>
+                    <p className="text-xs text-stone-500">Total Pemeriksaan</p>
+                  </div>
                 </div>
-                <div className="text-center p-3 rounded-lg bg-yellow-50">
-                  <p className="text-2xl font-bold text-yellow-700">{ringkasanBulanan.status.perlu_perhatian}</p>
-                  <p className="text-xs text-yellow-600">Perlu Perhatian</p>
+              </div>
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-200">
+                    <TrendingUp className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>+{pertumbuhanPersen}%</p>
+                    <p className="text-xs text-stone-500">vs Bulan Lalu</p>
+                  </div>
                 </div>
-                <div className="text-center p-3 rounded-lg bg-red-50">
-                  <p className="text-2xl font-bold text-red-700">{ringkasanBulanan.status.berisiko}</p>
-                  <p className="text-xs text-red-600">Berisiko</p>
+              </div>
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center shadow-lg shadow-violet-200">
+                    <Baby className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>+{ringkasan.balita_baru}</p>
+                    <p className="text-xs text-stone-500">Balita Baru</p>
+                  </div>
                 </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-3">
+              <div className="text-center p-4 rounded-2xl bg-emerald-50 border border-emerald-100">
+                <p className="text-3xl font-bold text-emerald-600" style={{ fontFamily: 'var(--font-nunito)' }}>{ringkasan.status.normal}</p>
+                <p className="text-sm text-emerald-600 mt-1">Gizi Baik</p>
+              </div>
+              <div className="text-center p-4 rounded-2xl bg-amber-50 border border-amber-100">
+                <p className="text-3xl font-bold text-amber-600" style={{ fontFamily: 'var(--font-nunito)' }}>{ringkasan.status.perlu_perhatian}</p>
+                <p className="text-sm text-amber-600 mt-1">Perlu Perhatian</p>
+              </div>
+              <div className="text-center p-4 rounded-2xl bg-rose-50 border border-rose-100">
+                <p className="text-3xl font-bold text-rose-600" style={{ fontFamily: 'var(--font-nunito)' }}>{ringkasan.status.berisiko}</p>
+                <p className="text-sm text-rose-600 mt-1">Berisiko</p>
               </div>
             </div>
           </CardContent>
@@ -64,48 +95,21 @@ export default function LaporanPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-green-100 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">Laporan Excel (.xlsx)</p>
-                    <p className="text-sm text-gray-500">Data lengkap pemeriksaan</p>
-                  </div>
-                </div>
-                <Button variant="outline" size="sm">Unduh</Button>
-              </div>
-              <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-red-100 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">Laporan PDF</p>
-                    <p className="text-sm text-gray-500">Format siap cetak</p>
-                  </div>
-                </div>
-                <Button variant="outline" size="sm">Unduh</Button>
-              </div>
-              <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">Data CSV</p>
-                    <p className="text-sm text-gray-500">Format untuk analisis lanjutan</p>
-                  </div>
-                </div>
-                <Button variant="outline" size="sm">Unduh</Button>
-              </div>
+              {eksporList.map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <Button key={i} variant="outline" className="w-full justify-start gap-4 p-4 h-auto">
+                    <div className={`h-11 w-11 rounded-xl bg-gradient-to-br ${item.warna} flex items-center justify-center shadow-lg ${item.shadow}`}>
+                      <Icon className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <p className="font-semibold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>{item.nama}</p>
+                      <p className="text-xs text-stone-500">{item.format}</p>
+                    </div>
+                    <Download className="w-5 h-5 text-stone-400" />
+                  </Button>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
@@ -113,15 +117,13 @@ export default function LaporanPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Grafik Pertumbuhan Bulanan</CardTitle>
+          <CardTitle>Grafik Tren Pertumbuhan</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+          <div className="h-64 flex items-center justify-center bg-gradient-to-br from-stone-50 to-stone-100 rounded-2xl border-2 border-dashed border-stone-200">
             <div className="text-center">
-              <svg className="w-12 h-12 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-              <p className="text-gray-500">Grafik akan muncul setelah integrasi API</p>
+              <BarChart3 className="w-12 h-12 text-stone-300 mx-auto mb-3" />
+              <p className="text-stone-400 font-medium">Grafik akan ditampilkan setelah integrasi API</p>
             </div>
           </div>
         </CardContent>

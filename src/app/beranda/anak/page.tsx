@@ -1,72 +1,74 @@
-import { Card, CardContent, CardHeader, CardTitle, Button } from "@/components/ui";
+"use client";
 
-const anakSaya = [
-  {
-    id: 1,
-    nama: "Andi Pratama",
-    tanggal_lahir: "15 Juni 2023",
-    jenis_kelamin: "Laki-laki",
-    berat_lahir: "3.2 kg",
-    panjang_lahir: "50 cm",
-    status: "kuning",
-  },
-];
+import { Baby, Scale, Ruler, CircleDot, Heart, Calendar } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, Avatar, StatusBadge } from "@/components/ui";
 
-function StatusBadge({ status }: { status: string }) {
-  const colors: Record<string, string> = {
-    normal: "bg-green-100 text-green-700",
-    kuning: "bg-yellow-100 text-yellow-700",
-    merah: "bg-red-100 text-red-700",
-  };
-  const labels: Record<string, string> = {
-    normal: "Normal",
-    kuning: "Perlu Perhatian",
-    merah: "Berisiko",
-  };
-  return (
-    <span className={`px-3 py-1 rounded-full text-sm font-medium ${colors[status]}`}>
-      {labels[status]}
-    </span>
-  );
-}
+const anakSaya = {
+  nama: "Andi Pratama",
+  tanggal_lahir: "15 Juni 2023",
+  jenis_kelamin: "Laki-laki",
+  berat_lahir: "3.2 kg",
+  panjang_lahir: "50 cm",
+  status: "kuning",
+};
+
+const dataTerakhir = { bb: 10.2, tb: 78, lk: 44, lila: 13, tanggal: "9 Desember 2024" };
 
 export default function AnakSayaPage() {
-  const anak = anakSaya[0];
-
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">Anak Saya</h2>
-        <p className="text-gray-500">Data lengkap anak yang terdaftar</p>
+        <h1 className="text-2xl font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>Anak Saya</h1>
+        <p className="text-stone-500 mt-1">Profil lengkap dan data perkembangan anak</p>
       </div>
 
       <Card>
         <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row gap-6">
+          <div className="flex flex-col md:flex-row gap-8">
             <div className="flex flex-col items-center">
-              <div className="h-32 w-32 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-4xl font-bold mb-4">
-                {anak.nama.charAt(0)}
+              <Avatar name={anakSaya.nama} size="xl" className="h-32 w-32 text-4xl rounded-3xl" />
+              <div className="mt-4">
+                <StatusBadge status={anakSaya.status} />
               </div>
-              <StatusBadge status={anak.status} />
             </div>
             <div className="flex-1">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">{anak.nama}</h3>
+              <h2 className="text-2xl font-bold text-stone-800 mb-5" style={{ fontFamily: 'var(--font-nunito)' }}>{anakSaya.nama}</h2>
               <div className="grid gap-4 md:grid-cols-2">
-                <div className="p-4 rounded-lg bg-gray-50">
-                  <p className="text-sm text-gray-500">Tanggal Lahir</p>
-                  <p className="font-medium text-gray-900">{anak.tanggal_lahir}</p>
+                <div className="flex items-center gap-3 p-4 rounded-2xl bg-stone-50">
+                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center shadow-md">
+                    <Calendar className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-stone-400">Tanggal Lahir</p>
+                    <p className="font-semibold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>{anakSaya.tanggal_lahir}</p>
+                  </div>
                 </div>
-                <div className="p-4 rounded-lg bg-gray-50">
-                  <p className="text-sm text-gray-500">Jenis Kelamin</p>
-                  <p className="font-medium text-gray-900">{anak.jenis_kelamin}</p>
+                <div className="flex items-center gap-3 p-4 rounded-2xl bg-stone-50">
+                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center shadow-md">
+                    <Baby className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-stone-400">Jenis Kelamin</p>
+                    <p className="font-semibold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>👦 {anakSaya.jenis_kelamin}</p>
+                  </div>
                 </div>
-                <div className="p-4 rounded-lg bg-gray-50">
-                  <p className="text-sm text-gray-500">Berat Lahir</p>
-                  <p className="font-medium text-gray-900">{anak.berat_lahir}</p>
+                <div className="flex items-center gap-3 p-4 rounded-2xl bg-stone-50">
+                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-md">
+                    <Scale className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-stone-400">Berat Lahir</p>
+                    <p className="font-semibold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>{anakSaya.berat_lahir}</p>
+                  </div>
                 </div>
-                <div className="p-4 rounded-lg bg-gray-50">
-                  <p className="text-sm text-gray-500">Panjang Lahir</p>
-                  <p className="font-medium text-gray-900">{anak.panjang_lahir}</p>
+                <div className="flex items-center gap-3 p-4 rounded-2xl bg-stone-50">
+                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center shadow-md">
+                    <Ruler className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-stone-400">Panjang Lahir</p>
+                    <p className="font-semibold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>{anakSaya.panjang_lahir}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -80,28 +82,32 @@ export default function AnakSayaPage() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-4">
-            <div className="text-center p-4 rounded-lg bg-blue-50">
-              <p className="text-3xl font-bold text-blue-600">10.2</p>
-              <p className="text-sm text-blue-600">kg</p>
-              <p className="text-xs text-gray-500 mt-1">Berat Badan</p>
+            <div className="text-center p-5 rounded-2xl bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-100">
+              <Scale className="w-6 h-6 text-sky-500 mx-auto mb-2" />
+              <p className="text-3xl font-bold text-sky-600" style={{ fontFamily: 'var(--font-nunito)' }}>{dataTerakhir.bb}</p>
+              <p className="text-sm text-sky-500">kg</p>
+              <p className="text-xs text-stone-400 mt-2">Berat Badan</p>
             </div>
-            <div className="text-center p-4 rounded-lg bg-green-50">
-              <p className="text-3xl font-bold text-green-600">78</p>
-              <p className="text-sm text-green-600">cm</p>
-              <p className="text-xs text-gray-500 mt-1">Tinggi Badan</p>
+            <div className="text-center p-5 rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100">
+              <Ruler className="w-6 h-6 text-emerald-500 mx-auto mb-2" />
+              <p className="text-3xl font-bold text-emerald-600" style={{ fontFamily: 'var(--font-nunito)' }}>{dataTerakhir.tb}</p>
+              <p className="text-sm text-emerald-500">cm</p>
+              <p className="text-xs text-stone-400 mt-2">Tinggi Badan</p>
             </div>
-            <div className="text-center p-4 rounded-lg bg-purple-50">
-              <p className="text-3xl font-bold text-purple-600">44</p>
-              <p className="text-sm text-purple-600">cm</p>
-              <p className="text-xs text-gray-500 mt-1">Lingkar Kepala</p>
+            <div className="text-center p-5 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100">
+              <CircleDot className="w-6 h-6 text-violet-500 mx-auto mb-2" />
+              <p className="text-3xl font-bold text-violet-600" style={{ fontFamily: 'var(--font-nunito)' }}>{dataTerakhir.lk}</p>
+              <p className="text-sm text-violet-500">cm</p>
+              <p className="text-xs text-stone-400 mt-2">Lingkar Kepala</p>
             </div>
-            <div className="text-center p-4 rounded-lg bg-orange-50">
-              <p className="text-3xl font-bold text-orange-600">13</p>
-              <p className="text-sm text-orange-600">cm</p>
-              <p className="text-xs text-gray-500 mt-1">Lingkar Lengan</p>
+            <div className="text-center p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100">
+              <Heart className="w-6 h-6 text-amber-500 mx-auto mb-2" />
+              <p className="text-3xl font-bold text-amber-600" style={{ fontFamily: 'var(--font-nunito)' }}>{dataTerakhir.lila}</p>
+              <p className="text-sm text-amber-500">cm</p>
+              <p className="text-xs text-stone-400 mt-2">Lingkar Lengan</p>
             </div>
           </div>
-          <p className="text-sm text-gray-500 text-center mt-4">Terakhir diukur: 9 Desember 2024</p>
+          <p className="text-center text-sm text-stone-400 mt-5">Terakhir diukur: {dataTerakhir.tanggal}</p>
         </CardContent>
       </Card>
     </div>

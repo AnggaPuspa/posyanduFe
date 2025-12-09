@@ -1,4 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
+"use client";
+
+import { Brain, TrendingUp, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, Badge } from "@/components/ui";
 
 const hasilAnalisis = {
   tanggal: "9 Desember 2024",
@@ -18,43 +21,45 @@ const hasilAnalisis = {
 };
 
 function RisikoBadge({ level }: { level: string }) {
-  const config: Record<string, { bg: string; text: string; label: string }> = {
-    hijau: { bg: "bg-green-100", text: "text-green-700", label: "Risiko Rendah" },
-    kuning: { bg: "bg-yellow-100", text: "text-yellow-700", label: "Risiko Sedang" },
-    merah: { bg: "bg-red-100", text: "text-red-700", label: "Risiko Tinggi" },
+  const config: Record<string, { variant: "success" | "warning" | "danger"; icon: React.ElementType; label: string }> = {
+    hijau: { variant: "success", icon: CheckCircle2, label: "Risiko Rendah" },
+    kuning: { variant: "warning", icon: AlertTriangle, label: "Risiko Sedang" },
+    merah: { variant: "danger", icon: AlertTriangle, label: "Risiko Tinggi" },
   };
   const c = config[level] || config.hijau;
+  const Icon = c.icon;
   return (
-    <span className={`px-3 py-1 rounded-full text-sm font-medium ${c.bg} ${c.text}`}>
+    <Badge variant={c.variant} className="inline-flex items-center gap-2 px-4 py-2">
+      <Icon className="w-4 h-4" />
       {c.label}
-    </span>
+    </Badge>
   );
 }
 
 function ZScoreBar({ value, label }: { value: number; label: string }) {
   const position = Math.max(0, Math.min(100, ((value + 3) / 6) * 100));
-  const color = value < -2 ? "bg-red-500" : value < -1 ? "bg-yellow-500" : "bg-green-500";
+  const color = value < -2 ? "from-rose-400 to-red-500" : value < -1 ? "from-amber-400 to-orange-500" : "from-emerald-400 to-teal-500";
 
   return (
     <div className="space-y-2">
       <div className="flex justify-between text-sm">
-        <span className="text-gray-600">{label}</span>
-        <span className="font-semibold">{value.toFixed(1)} SD</span>
+        <span className="text-stone-600">{label}</span>
+        <span className="font-bold text-stone-800">{value.toFixed(1)} SD</span>
       </div>
-      <div className="relative h-3 bg-gray-200 rounded-full overflow-hidden">
+      <div className="relative h-4 bg-stone-100 rounded-full overflow-hidden">
         <div className="absolute inset-0 flex">
-          <div className="w-1/6 bg-red-200" />
-          <div className="w-1/6 bg-yellow-200" />
-          <div className="w-2/6 bg-green-200" />
-          <div className="w-1/6 bg-yellow-200" />
-          <div className="w-1/6 bg-red-200" />
+          <div className="w-1/6 bg-rose-200/60" />
+          <div className="w-1/6 bg-amber-200/60" />
+          <div className="w-2/6 bg-emerald-200/60" />
+          <div className="w-1/6 bg-amber-200/60" />
+          <div className="w-1/6 bg-rose-200/60" />
         </div>
         <div
-          className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-white shadow ${color}`}
-          style={{ left: `calc(${position}% - 8px)` }}
+          className={`absolute top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-gradient-to-br ${color} border-2 border-white shadow-lg`}
+          style={{ left: `calc(${position}% - 12px)` }}
         />
       </div>
-      <div className="flex justify-between text-xs text-gray-400">
+      <div className="flex justify-between text-xs text-stone-400">
         <span>-3 (Buruk)</span>
         <span>0 (Normal)</span>
         <span>+3 (Lebih)</span>
@@ -66,9 +71,15 @@ function ZScoreBar({ value, label }: { value: number; label: string }) {
 export default function HasilPage() {
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900">Hasil Analisis AI</h2>
-        <p className="text-gray-500">Analisis pertumbuhan Andi berdasarkan data terakhir</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>Hasil Analisis AI</h1>
+          <p className="text-stone-500 mt-1">Analisis pertumbuhan Andi berdasarkan data terakhir</p>
+        </div>
+        <Badge variant="info" className="flex items-center gap-2 px-4 py-2">
+          <Brain className="w-5 h-5" />
+          Powered by Gemini AI
+        </Badge>
       </div>
 
       <Card>
@@ -78,49 +89,46 @@ export default function HasilPage() {
             <RisikoBadge level={hasilAnalisis.level_risiko} />
           </div>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
+        <CardContent>
+          <div className="grid gap-6 lg:grid-cols-2">
             <div className="space-y-6">
-              <h4 className="font-semibold text-gray-900">Z-Score (Standar WHO)</h4>
+              <h3 className="text-sm font-semibold text-stone-500 uppercase tracking-wide">Z-Score (Standar WHO)</h3>
               <ZScoreBar value={hasilAnalisis.z_score_bb_u} label="BB/U (Berat per Umur)" />
               <ZScoreBar value={hasilAnalisis.z_score_tb_u} label="TB/U (Tinggi per Umur)" />
             </div>
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-3">Status Gizi</h4>
-              <div className="p-4 rounded-lg bg-yellow-50 border border-yellow-200">
-                <p className="text-lg font-semibold text-yellow-800 mb-2">{hasilAnalisis.status_gizi}</p>
-                <p className="text-sm text-yellow-700">{hasilAnalisis.interpretasi}</p>
+            
+            <div className="space-y-4">
+              <div className="p-5 rounded-2xl bg-amber-50 border border-amber-100">
+                <p className="text-lg font-bold text-amber-800 mb-2" style={{ fontFamily: 'var(--font-nunito)' }}>{hasilAnalisis.status_gizi}</p>
+                <p className="text-sm text-amber-700">{hasilAnalisis.interpretasi}</p>
+              </div>
+              <div className="p-5 rounded-2xl bg-violet-50 border border-violet-100">
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingUp className="w-5 h-5 text-violet-500" />
+                  <span className="font-semibold text-violet-800" style={{ fontFamily: 'var(--font-nunito)' }}>Prediksi 3 Bulan</span>
+                </div>
+                <p className="text-sm text-violet-700">{hasilAnalisis.prediksi}</p>
               </div>
             </div>
           </div>
+        </CardContent>
+      </Card>
 
-          <div className="p-4 rounded-lg bg-purple-50 border border-purple-200">
-            <h4 className="font-semibold text-purple-900 mb-2 flex items-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
-              Prediksi 3 Bulan ke Depan
-            </h4>
-            <p className="text-sm text-purple-700">{hasilAnalisis.prediksi}</p>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-              <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              Rekomendasi untuk Orang Tua
-            </h4>
-            <div className="space-y-2">
-              {hasilAnalisis.rekomendasi.map((r, i) => (
-                <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-gray-50">
-                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-sm font-medium">
-                    {i + 1}
-                  </span>
-                  <p className="text-sm text-gray-700">{r}</p>
-                </div>
-              ))}
-            </div>
+      <Card className="bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-100">
+        <CardContent className="p-6">
+          <h2 className="text-lg font-bold text-stone-800 mb-5 flex items-center gap-2" style={{ fontFamily: 'var(--font-nunito)' }}>
+            <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+            Rekomendasi untuk Orang Tua
+          </h2>
+          <div className="grid gap-3">
+            {hasilAnalisis.rekomendasi.map((r, i) => (
+              <div key={i} className="flex items-start gap-4 p-4 bg-white rounded-2xl shadow-sm">
+                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 text-white flex items-center justify-center text-sm font-bold shadow-lg shadow-emerald-200">
+                  {i + 1}
+                </span>
+                <p className="text-stone-700 pt-1">{r}</p>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>
