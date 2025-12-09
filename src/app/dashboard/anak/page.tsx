@@ -27,36 +27,74 @@ export default function DataAnakPage() {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>Data Balita</h1>
-          <p className="text-stone-500 mt-1">Kelola data balita yang terdaftar di Posyandu</p>
+          <h1 className="text-xl md:text-2xl font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>Data Balita</h1>
+          <p className="text-sm md:text-base text-stone-500 mt-1">Kelola data balita yang terdaftar di Posyandu</p>
         </div>
-        <Button>
+        <Button className="w-full sm:w-auto">
           <Plus className="w-5 h-5 mr-2" />
           Tambah Balita
         </Button>
       </div>
 
       <Card>
-        <CardContent className="p-6">
-          <div className="flex items-center gap-4 mb-6">
+        <CardContent className="p-4 md:p-6">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4 mb-4 md:mb-6">
             <div className="flex-1">
               <Input
-                placeholder="Cari nama atau NIK balita..."
+                placeholder="Cari nama atau NIK..."
                 value={cari}
                 onChange={(e) => setCari(e.target.value)}
                 icon={<Search className="w-5 h-5" />}
               />
             </div>
-            <Button variant="outline">
+            <Button variant="outline" className="w-full sm:w-auto">
               <Filter className="w-4 h-4 mr-2" />
               Filter
             </Button>
           </div>
 
-          <div className="overflow-x-auto">
+          {/* Mobile Card View */}
+          <div className="md:hidden space-y-3">
+            {dataFiltered.map((anak) => (
+              <div key={anak.id} className="p-4 rounded-2xl bg-stone-50 border border-stone-100">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <Avatar name={anak.nama} size="md" />
+                    <div>
+                      <p className="font-semibold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>{anak.nama}</p>
+                      <p className="text-xs text-stone-500">{hitungUmur(anak.tanggal_lahir)} • {anak.jenis_kelamin === "L" ? "Laki-laki" : "Perempuan"}</p>
+                    </div>
+                  </div>
+                  <StatusBadge status={anak.status} />
+                </div>
+                <div className="space-y-1 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-stone-500">Nama Ibu</span>
+                    <span className="text-stone-700">{anak.nama_ibu}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-stone-500">NIK</span>
+                    <span className="text-stone-700 font-mono text-xs">{anak.nik.slice(-8)}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 mt-3 pt-3 border-t border-stone-200">
+                  <Button variant="outline" size="sm" className="flex-1 text-xs">
+                    <Eye className="w-3 h-3 mr-1" /> Detail
+                  </Button>
+                  <Button variant="outline" size="sm" className="flex-1 text-xs">
+                    <Pencil className="w-3 h-3 mr-1" /> Edit
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop Table View */}
+
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-stone-100">
@@ -102,13 +140,13 @@ export default function DataAnakPage() {
             </table>
           </div>
 
-          <div className="flex items-center justify-between mt-6 pt-4 border-t border-stone-100">
-            <p className="text-sm text-stone-500">Menampilkan {dataFiltered.length} dari {dummyAnak.length} balita</p>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4 md:mt-6 pt-4 border-t border-stone-100">
+            <p className="text-xs md:text-sm text-stone-500">Menampilkan {dataFiltered.length} dari {dummyAnak.length} balita</p>
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" disabled>
                 <ChevronLeft className="w-4 h-4" />
               </Button>
-              <span className="px-4 py-2 rounded-xl bg-amber-50 text-amber-600 font-semibold text-sm">1</span>
+              <span className="px-3 py-1.5 md:px-4 md:py-2 rounded-xl bg-amber-50 text-amber-600 font-semibold text-xs md:text-sm">1</span>
               <Button variant="outline" size="sm">
                 <ChevronRight className="w-4 h-4" />
               </Button>

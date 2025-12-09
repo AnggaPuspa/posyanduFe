@@ -4,8 +4,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="min-h-screen bg-stone-50">
       <Sidebar />
-      <div className="ml-72">
-        <main className="p-8">{children}</main>
+      {/* Main content - responsive padding */}
+      <div className="lg:ml-72">
+        {/* Spacer for mobile header */}
+        <div className="h-16 lg:hidden" />
+        <main className="p-4 md:p-6 lg:p-8">{children}</main>
       </div>
     </div>
   );
