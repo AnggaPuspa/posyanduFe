@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight, Sparkles, Baby, Users, MapPin, BarChart3, Bell, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui";
+import { FloatingNav, Footer } from "@/components/layout";
 
 function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
   const [count, setCount] = useState(0);
@@ -206,8 +207,11 @@ function DashboardMockup() {
 export default function Home() {
   return (
     <main className="min-h-screen bg-stone-50">
+      {/* Floating Navigation */}
+      <FloatingNav />
+
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
+      <section id="beranda" className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-stone-50 to-emerald-50" />
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-amber-200/20 to-orange-200/20 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-br from-emerald-200/20 to-teal-200/20 rounded-full blur-3xl" />
@@ -277,7 +281,7 @@ export default function Home() {
       <div className="h-16 bg-gradient-to-b from-stone-50 to-white" />
 
       {/* Coverage Map Section */}
-      <section className="relative py-12 bg-white">
+      <section id="peta" className="relative py-12 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-full mb-6">
@@ -356,21 +360,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 bg-stone-900">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-bold">
-                P
-              </div>
-              <span className="text-lg font-bold text-white" style={{ fontFamily: 'var(--font-nunito)' }}>Posyandu Pintar</span>
-            </div>
-            <p className="text-sm text-stone-400">
-              &copy; 2024 Posyandu Pintar. Mendukung Indonesia Bebas Stunting 2045.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 }
