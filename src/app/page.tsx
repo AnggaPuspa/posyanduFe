@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight, Sparkles, Baby, Users, MapPin, BarChart3, Bell, TrendingUp } from "lucide-react";
+import { ArrowRight, Sparkles, Baby, Users, MapPin, BarChart3, Bell, TrendingUp, Building2, Activity } from "lucide-react";
 import { Button } from "@/components/ui";
 import { FloatingNav, Footer } from "@/components/layout";
 
@@ -32,54 +32,24 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
 }
 
 function IndonesiaMap() {
-  // Hanya 6 kota besar strategis untuk tampilan clean
-  const beacons = [
-    { x: 9, y: 16, label: "Medan", count: "2,340" },
-    { x: 21, y: 78, label: "Jakarta", count: "4,560" },
-    { x: 39, y: 78, label: "Surabaya", count: "3,120" },
-    { x: 60, y: 35, label: "Balikpapan", count: "1,890" },
-    { x: 67, y: 58, label: "Makassar", count: "1,450" },
-    { x: 93, y: 42, label: "Jayapura", count: "980" },
-  ];
-
   return (
-    <div className="relative">
-      <div className="relative w-full">
-        <img 
-          src="/map.svg" 
-          alt="Peta Indonesia" 
-          className="w-full h-auto"
-          style={{ filter: 'hue-rotate(120deg) saturate(0.35) brightness(1.05)' }}
-        />
-        
-        {/* Clean Beacons */}
-        <div className="absolute inset-0">
-          {beacons.map((beacon, i) => (
-            <div
-              key={i}
-              className="absolute -translate-x-1/2 -translate-y-1/2 group cursor-pointer"
-              style={{ left: `${beacon.x}%`, top: `${beacon.y}%` }}
-            >
-              {/* Subtle pulse ring */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-8 h-8 bg-emerald-400/20 rounded-full animate-ping" style={{ animationDuration: '3s' }} />
-              </div>
-              
-              {/* Beacon dot */}
-              <div className="relative w-3 h-3 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full shadow-lg shadow-emerald-400/50 ring-2 ring-white" />
-              
-              {/* Tooltip on hover */}
-              <div className="absolute left-1/2 -translate-x-1/2 -top-12 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                <div className="bg-stone-800 text-white text-xs px-3 py-1.5 rounded-lg whitespace-nowrap shadow-xl">
-                  <span className="font-semibold">{beacon.label}</span>
-                  <span className="text-emerald-400 ml-1">{beacon.count}</span>
-                </div>
-                <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-stone-800" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+    <div className="relative w-full" style={{ animationTimingFunction: 'ease-in-out' }}>
+      {/* Map Image with Color Grading */}
+      <img 
+        src="/map.svg" 
+        alt="Peta Indonesia" 
+        className="w-full h-auto saturate-[0.85] contrast-[1.05] opacity-80"
+      />
+      
+      {/* Edge Fade Overlays - Makes map blend into background */}
+      {/* Top Fade */}
+      <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-white via-white/60 to-transparent pointer-events-none" />
+      {/* Bottom Fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none" />
+      {/* Left Fade */}
+      <div className="absolute top-0 bottom-0 left-0 w-24 bg-gradient-to-r from-white via-white/50 to-transparent pointer-events-none" />
+      {/* Right Fade */}
+      <div className="absolute top-0 bottom-0 right-0 w-24 bg-gradient-to-l from-white via-white/50 to-transparent pointer-events-none" />
     </div>
   );
 }
@@ -296,39 +266,54 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Map - Command Center Style */}
-          <div className="relative max-w-5xl mx-auto mb-16">
+          {/* Map - Command Center Style with Floating HUD */}
+          <div className="relative max-w-5xl mx-auto">
             <IndonesiaMap />
-          </div>
+            
+            {/* Stats - Fully Transparent Floating */}
+            <div className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 z-20 w-full max-w-3xl px-4">
+              <div className="flex items-center justify-center gap-8 md:gap-12">
+                  
+                  {/* Stat 1: Balita */}
+                  <div className="flex items-center gap-2.5 md:px-6">
+                    <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center flex-shrink-0 shadow-md shadow-sky-400/20">
+                      <Baby className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-lg md:text-xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent leading-tight" style={{ fontFamily: 'var(--font-nunito)' }}>
+                        <AnimatedCounter target={45280} />
+                      </p>
+                      <p className="text-[10px] text-slate-600 font-medium">Balita</p>
+                    </div>
+                  </div>
 
-          {/* Stats */}
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <div className="text-center p-8 bg-gradient-to-br from-sky-50 to-blue-50 rounded-3xl border border-sky-100">
-              <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-sky-200">
-                <Baby className="w-7 h-7 text-white" />
+                  {/* Stat 2: Posyandu */}
+                  <div className="flex items-center gap-2.5 md:px-6">
+                    <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center flex-shrink-0 shadow-md shadow-emerald-400/20">
+                      <MapPin className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-lg md:text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent leading-tight" style={{ fontFamily: 'var(--font-nunito)' }}>
+                        <AnimatedCounter target={11220} />
+                      </p>
+                      <p className="text-[10px] text-slate-600 font-medium">Posyandu</p>
+                    </div>
+                  </div>
+
+                  {/* Stat 3: Kader */}
+                  <div className="flex items-center gap-2.5 md:px-6">
+                    <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center flex-shrink-0 shadow-md shadow-orange-400/20">
+                      <Users className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-lg md:text-xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent leading-tight" style={{ fontFamily: 'var(--font-nunito)' }}>
+                        <AnimatedCounter target={28450} />
+                      </p>
+                      <p className="text-[10px] text-slate-600 font-medium">Kader</p>
+                    </div>
+                  </div>
+
               </div>
-              <p className="text-4xl font-bold text-stone-800 mb-2" style={{ fontFamily: 'var(--font-nunito)' }}>
-                <AnimatedCounter target={45280} />
-              </p>
-              <p className="text-stone-600">Balita Terpantau</p>
-            </div>
-            <div className="text-center p-8 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-3xl border border-emerald-100">
-              <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-200">
-                <MapPin className="w-7 h-7 text-white" />
-              </div>
-              <p className="text-4xl font-bold text-stone-800 mb-2" style={{ fontFamily: 'var(--font-nunito)' }}>
-                <AnimatedCounter target={11220} />
-              </p>
-              <p className="text-stone-600">Posyandu Terdaftar</p>
-            </div>
-            <div className="text-center p-8 bg-gradient-to-br from-amber-50 to-orange-50 rounded-3xl border border-amber-100">
-              <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-orange-200">
-                <Users className="w-7 h-7 text-white" />
-              </div>
-              <p className="text-4xl font-bold text-stone-800 mb-2" style={{ fontFamily: 'var(--font-nunito)' }}>
-                <AnimatedCounter target={28450} />
-              </p>
-              <p className="text-stone-600">Kader Aktif</p>
             </div>
           </div>
         </div>
@@ -340,46 +325,40 @@ export default function Home() {
           {/* Floating Card Container */}
           <div className="relative">
             {/* The Card */}
-            <div className="relative bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl min-h-[320px] md:min-h-[380px]">
-              {/* Inner Glow Effects */}
-              <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl" />
-              <div className="absolute bottom-0 left-1/2 w-60 h-60 bg-teal-500/10 rounded-full blur-3xl" />
+            <div className="relative bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl overflow-hidden">
+              {/* Inner Glow Effects - Hidden on mobile */}
+              <div className="hidden md:block absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl" />
+              <div className="hidden md:block absolute bottom-0 left-1/2 w-60 h-60 bg-teal-500/10 rounded-full blur-3xl" />
 
               <div className="relative grid lg:grid-cols-2 gap-8 items-center">
                 {/* Left: Text Content */}
-                <div className="p-8 md:p-12 lg:p-16">
-                  {/* Badge */}
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-6 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-xs font-medium text-emerald-400">12,000+ Posyandu Terdaftar</span>
-                  </div>
-
+                <div className="p-6 md:p-10 lg:p-12">
                   {/* Headline */}
                   <h2 
-                    className="text-3xl md:text-4xl lg:text-5xl font-bold leading-[1.1] mb-5"
+                    className="text-3xl md:text-4xl lg:text-5xl font-bold leading-[1.1] mb-4"
                     style={{ fontFamily: 'var(--font-nunito)' }}
                   >
-                    <span className="text-white">Mulai Pantau</span>
+                    <span className="text-white">Dari Data,</span>
                     <br />
-                    <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">Sekarang.</span>
+                    <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">Jadi Generasi Sehat.</span>
                   </h2>
 
                   {/* Subtext */}
-                  <p className="text-slate-400 text-sm md:text-base max-w-sm mb-8 leading-relaxed">
-                    Bergabung dengan ribuan Posyandu yang telah menggunakan teknologi AI untuk memantau tumbuh kembang anak.
+                  <p className="text-slate-400 text-sm md:text-base max-w-md mb-8 leading-relaxed">
+                    Ubah cara Posyandu bekerja. Dengan analisis AI, deteksi stunting jadi lebih cepat, intervensi lebih akurat. Bukan sekadar menimbang, tapi menyelamatkan masa depan.
                   </p>
 
                   {/* CTA Buttons */}
                   <div className="flex flex-wrap items-center gap-3">
                     <Link href="/dashboard">
                       <button className="group h-12 md:h-14 px-6 md:px-8 rounded-full bg-white text-emerald-900 font-semibold text-sm md:text-base shadow-xl hover:bg-emerald-50 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2">
-                        Daftar Gratis
+                        Lihat Aksi Nyata
                         <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
                       </button>
                     </Link>
-                    <Link href="/beranda">
+                    <Link href="/kontak">
                       <button className="h-12 md:h-14 px-5 md:px-6 rounded-full border border-slate-600 text-slate-300 font-medium text-sm md:text-base hover:bg-slate-800 hover:border-slate-500 transition-all">
-                        Lihat Demo
+                        Hubungi Kami
                       </button>
                     </Link>
                   </div>
@@ -390,7 +369,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Doctor Image - OUTSIDE card, positioned absolutely to pop-out */}
+            {/* Doctor Image - Desktop Only */}
             <div className="hidden lg:flex absolute right-4 bottom-0 z-20 h-full items-end pointer-events-none">
               {/* Backlight Glow */}
               <div className="absolute bottom-0 right-20 w-80 h-[120%] bg-gradient-to-t from-cyan-500/20 via-teal-500/10 to-transparent blur-3xl -z-10" />
@@ -401,18 +380,6 @@ export default function Home() {
                 alt="Dokter Profesional" 
                 className="relative h-[125%] w-auto object-contain object-bottom drop-shadow-2xl"
               />
-            </div>
-
-            {/* Mobile Doctor - Below Card */}
-            <div className="lg:hidden flex justify-center -mt-6 relative z-10">
-              <div className="relative">
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-40 h-60 bg-gradient-to-t from-emerald-500/20 to-transparent blur-2xl" />
-                <img 
-                  src="/doctor.png" 
-                  alt="Dokter Profesional" 
-                  className="h-[280px] object-contain drop-shadow-xl"
-                />
-              </div>
             </div>
           </div>
         </div>

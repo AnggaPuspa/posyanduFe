@@ -38,19 +38,32 @@ export function Footer() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
             <span className="text-[11px] font-medium text-slate-500 uppercase tracking-widest">Official Partners</span>
             <div className="flex items-center gap-6">
-              {/* Partner Logos - Grayscale, color on hover */}
-              <div className="group flex items-center gap-2 text-slate-500 hover:text-white transition-colors duration-300">
-                <div className="w-6 h-6 rounded bg-slate-700 group-hover:bg-emerald-600/20 transition-colors flex items-center justify-center">
-                  <span className="text-[10px] font-bold">K</span>
+              {/* Logo Kemkes (New) */}
+              <div className="group flex items-center gap-3 text-slate-500 hover:text-slate-200 transition-colors duration-300">
+                <div className="h-10 w-auto flex items-center grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300">
+                  <img 
+                    src="/logo_kemkes.png" 
+                    alt="Logo Kementerian Kesehatan" 
+                    className="h-full w-auto object-contain"
+                  />
+                  <div className="flex flex-col ml-3 justify-center">
+                    <span className="text-[9px] font-bold leading-tight uppercase text-slate-400 group-hover:text-slate-200">Kementerian</span>
+                    <span className="text-[9px] font-bold leading-tight uppercase text-slate-400 group-hover:text-slate-200">Kesehatan RI</span>
+                  </div>
                 </div>
-                <span className="text-xs font-semibold tracking-tight">Kementerian Kesehatan</span>
               </div>
-              <div className="w-px h-4 bg-slate-700" />
-              <div className="group flex items-center gap-2 text-slate-500 hover:text-white transition-colors duration-300">
-                <div className="w-6 h-6 rounded bg-slate-700 group-hover:bg-teal-600/20 transition-colors flex items-center justify-center">
-                  <span className="text-[10px] font-bold">S</span>
+              
+              <div className="w-px h-8 bg-slate-700/50" />
+              
+              {/* Logo Bangga Buatan Indonesia */}
+              <div className="group flex items-center gap-3 text-slate-500 hover:text-slate-200 transition-colors duration-300">
+                <div className="h-10 w-auto flex items-center grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300">
+                   <img 
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Logo_Bangga_Buatan_Indonesia.svg/2048px-Logo_Bangga_Buatan_Indonesia.svg.png" 
+                    alt="Logo Bangga Buatan Indonesia" 
+                    className="h-full w-auto object-contain"
+                  />
                 </div>
-                <span className="text-xs font-semibold tracking-tight">Startup Anak Bangsa</span>
               </div>
             </div>
           </div>
