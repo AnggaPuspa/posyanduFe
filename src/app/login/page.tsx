@@ -64,7 +64,11 @@ function LoginForm() {
             tampilkanSukses(PESAN_AUTH.LOGIN_BERHASIL);
 
             const halamanTujuan = searchParams.get("kembali") || KONFIGURASI_AUTH.HALAMAN_SESUAI_ROLE[respon.user.role] || KONFIGURASI_AUTH.HALAMAN_DEFAULT;
-            router.push(halamanTujuan);
+            
+            // Gunakan window.location untuk redirect yang lebih reliable di production
+            setTimeout(() => {
+                window.location.href = halamanTujuan;
+            }, 500);
         } catch (error) {
             const errorApi = error as ErrorApi;
 
