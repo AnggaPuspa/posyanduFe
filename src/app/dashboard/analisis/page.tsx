@@ -1,52 +1,19 @@
 "use client";
 
+import { useState, useEffect, useCallback } from "react";
 import { Brain, TrendingUp, AlertTriangle, CheckCircle2 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, Avatar, Badge } from "@/components/ui";
-
-const dummyAnalisis = [
-  {
-    id: 1,
-    nama_anak: "Rizki Ramadhan",
-    tanggal: "7 Des 2024",
-    z_score_bb_u: -2.8,
-    z_score_tb_u: -2.5,
-    status_gizi: "Gizi Kurang",
-    level_risiko: "merah",
-    interpretasi: "Anak mengalami underweight dan stunting berdasarkan standar WHO. Berat badan dan tinggi badan berada di bawah -2 SD.",
-    prediksi: "Jika tidak ada intervensi, risiko stunting permanen dalam 3 bulan ke depan sangat tinggi.",
-    rekomendasi: ["Konsultasi segera ke Puskesmas", "Berikan makanan tinggi protein", "Pantau pertumbuhan setiap 2 minggu"],
-  },
-  {
-    id: 2,
-    nama_anak: "Andi Pratama",
-    tanggal: "9 Des 2024",
-    z_score_bb_u: -1.5,
-    z_score_tb_u: -1.8,
-    status_gizi: "Gizi Cukup",
-    level_risiko: "kuning",
-    interpretasi: "Anak berada di zona waspada. Tinggi badan sedikit di bawah rata-rata untuk usianya.",
-    prediksi: "Dengan penanganan tepat, anak dapat kembali ke jalur pertumbuhan normal dalam 2-3 bulan.",
-    rekomendasi: ["Tingkatkan asupan protein hewani", "Berikan suplemen vitamin", "Pemeriksaan rutin setiap bulan"],
-  },
-  {
-    id: 3,
-    nama_anak: "Siti Nurhaliza",
-    tanggal: "9 Des 2024",
-    z_score_bb_u: 0.5,
-    z_score_tb_u: 0.3,
-    status_gizi: "Gizi Baik",
-    level_risiko: "hijau",
-    interpretasi: "Pertumbuhan anak sesuai dengan standar WHO. Berat badan dan tinggi badan dalam rentang normal.",
-    prediksi: "Pertumbuhan diprediksi akan tetap optimal jika pola makan dan kesehatan dijaga.",
-    rekomendasi: ["Pertahankan pola makan seimbang", "Lanjutkan pemeriksaan rutin", "Pastikan imunisasi lengkap"],
-  },
-];
+import { Card, CardContent, CardHeader, CardTitle, Avatar, Badge, Spinner } from "@/components/ui";
+import { recordsService } from "@/services";
+import type { RecordPemeriksaan } from "@/types";
 
 function RisikoBadge({ level }: { level: string }) {
   const config: Record<string, { variant: "success" | "warning" | "danger"; icon: React.ElementType; label: string }> = {
     hijau: { variant: "success", icon: CheckCircle2, label: "Risiko Rendah" },
+    normal: { variant: "success", icon: CheckCircle2, label: "Risiko Rendah" },
     kuning: { variant: "warning", icon: AlertTriangle, label: "Risiko Sedang" },
+    kurang: { variant: "warning", icon: AlertTriangle, label: "Risiko Sedang" },
     merah: { variant: "danger", icon: AlertTriangle, label: "Risiko Tinggi" },
+    buruk: { variant: "danger", icon: AlertTriangle, label: "Risiko Tinggi" },
   };
   const c = config[level] || config.hijau;
   const Icon = c.icon;
@@ -92,74 +59,161 @@ function ZScoreBar({ value, label }: { value: number; label: string }) {
   );
 }
 
+function formatTanggal(tanggal: string) {
+  return new Date(tanggal).toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
 export default function AnalisisPage() {
+  const [data, setData] = useState<RecordPemeriksaan[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const muatData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const result = await recordsService.ambilDaftar({ per_page: 50 });
+      const response = result as any;
+      
+      if (response?.data?.data && Array.isArray(response.data.data)) {
+        // Filter hanya yang punya AI prediction
+        const records = (response.data.data as RecordPemeriksaan[]).filter(r => r.ai_prediction);
+        setData(records);
+      }
+    } catch (error) {
+      console.error("Gagal memuat data analisis:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    muatData();
+  }, [muatData]);
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>Analisis AI</h1>
-          <p className="text-stone-500 mt-1">Hasil analisis pertumbuhan menggunakan AI (Google Gemini)</p>
+          <h1 className="text-xl md:text-2xl font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>Analisis AI</h1>
+          <p className="text-sm md:text-base text-stone-500 mt-1">Hasil analisis pertumbuhan menggunakan AI (Google Gemini)</p>
         </div>
-        <Badge variant="info" className="flex items-center gap-2 px-4 py-2">
+        <Badge variant="info" className="flex items-center gap-2 px-4 py-2 w-fit">
           <Brain className="w-5 h-5" />
           Powered by Gemini AI
         </Badge>
       </div>
 
-      <div className="space-y-5">
-        {dummyAnalisis.map((a) => (
-          <Card key={a.id}>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <Avatar name={a.nama_anak} size="lg" />
-                  <div>
-                    <CardTitle>{a.nama_anak}</CardTitle>
-                    <p className="text-sm text-stone-500">Pemeriksaan: {a.tanggal}</p>
+      {loading ? (
+        <div className="flex items-center justify-center py-20">
+          <Spinner size="lg" />
+        </div>
+      ) : data.length === 0 ? (
+        <Card>
+          <CardContent className="py-12 text-center">
+            <Brain className="w-16 h-16 mx-auto text-stone-300 mb-4" />
+            <p className="text-stone-500 text-lg">Belum ada data analisis AI</p>
+            <p className="text-stone-400 text-sm mt-1">Data analisis akan muncul setelah input pemeriksaan</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="space-y-5">
+          {data.map((record) => (
+            <Card key={record.id}>
+              <CardHeader>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-4">
+                    <Avatar name={record.child?.nama_anak || "?"} size="lg" />
+                    <div>
+                      <CardTitle>{record.child?.nama_anak || "Anak"}</CardTitle>
+                      <p className="text-sm text-stone-500">Pemeriksaan: {formatTanggal(record.created_at || record.tanggal_periksa || "")}</p>
+                    </div>
                   </div>
+                  <RisikoBadge level={record.ai_prediction?.hasil_prediksi || "normal"} />
                 </div>
-                <RisikoBadge level={a.level_risiko} />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-6 lg:grid-cols-2">
-                <div className="space-y-5">
-                  <h4 className="text-sm font-semibold text-stone-500 uppercase tracking-wide">Z-Score (Standar WHO)</h4>
-                  <ZScoreBar value={a.z_score_bb_u} label="BB/U (Berat per Umur)" />
-                  <ZScoreBar value={a.z_score_tb_u} label="TB/U (Tinggi per Umur)" />
-                </div>
-                
-                <div className="space-y-4">
-                  <div className={`p-4 rounded-2xl ${a.level_risiko === 'merah' ? 'bg-rose-50' : a.level_risiko === 'kuning' ? 'bg-amber-50' : 'bg-emerald-50'}`}>
-                    <p className="font-bold text-stone-800 mb-1" style={{ fontFamily: 'var(--font-nunito)' }}>{a.status_gizi}</p>
-                    <p className="text-sm text-stone-600">{a.interpretasi}</p>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-6 lg:grid-cols-2">
+                  <div className="space-y-5">
+                    <h4 className="text-sm font-semibold text-stone-500 uppercase tracking-wide">Z-Score (Standar WHO)</h4>
+                    <ZScoreBar value={record.ai_prediction?.z_score_bb_u || 0} label="BB/U (Berat per Umur)" />
+                    <ZScoreBar value={record.ai_prediction?.z_score_tb_u || 0} label="TB/U (Tinggi per Umur)" />
+                    {record.ai_prediction?.z_score_bb_tb && (
+                      <ZScoreBar value={record.ai_prediction.z_score_bb_tb} label="BB/TB (Berat per Tinggi)" />
+                    )}
                   </div>
                   
-                  <div className="p-4 rounded-2xl bg-violet-50">
-                    <div className="flex items-center gap-2 mb-2">
-                      <TrendingUp className="w-4 h-4 text-violet-500" />
-                      <span className="text-sm font-semibold text-violet-700">Prediksi 3 Bulan</span>
+                  <div className="space-y-4">
+                    <div className={`p-4 rounded-2xl ${
+                      record.ai_prediction?.hasil_prediksi === 'buruk' ? 'bg-rose-50' : 
+                      record.ai_prediction?.hasil_prediksi === 'kurang' ? 'bg-amber-50' : 'bg-emerald-50'
+                    }`}>
+                      <p className="font-bold text-stone-800 mb-1 capitalize" style={{ fontFamily: 'var(--font-nunito)' }}>
+                        {record.ai_prediction?.hasil_prediksi || "Normal"}
+                      </p>
+                      <p className="text-sm text-stone-600">
+                        Berat: {record.berat_badan} kg • Tinggi: {record.tinggi_badan} cm
+                      </p>
                     </div>
-                    <p className="text-sm text-violet-600">{a.prediksi}</p>
+                    
+                    {record.ai_prediction?.saran && (
+                      <div className="p-4 rounded-2xl bg-violet-50">
+                        <div className="flex items-center gap-2 mb-2">
+                          <TrendingUp className="w-4 h-4 text-violet-500" />
+                          <span className="text-sm font-semibold text-violet-700">Saran AI</span>
+                        </div>
+                        <p className="text-sm text-violet-600">{record.ai_prediction.saran}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
-              </div>
 
-              <div className="mt-6 pt-5 border-t border-stone-100">
-                <h4 className="text-sm font-semibold text-stone-500 uppercase tracking-wide mb-3">Rekomendasi</h4>
-                <div className="flex flex-wrap gap-2">
-                  {a.rekomendasi.map((r, i) => (
-                    <span key={i} className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                      {r}
-                    </span>
-                  ))}
+                <div className="mt-6 pt-5 border-t border-stone-100">
+                  <h4 className="text-sm font-semibold text-stone-500 uppercase tracking-wide mb-3">Rekomendasi</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {record.ai_prediction?.hasil_prediksi === "normal" ? (
+                      <>
+                        <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                          Pertahankan pola makan seimbang
+                        </span>
+                        <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                          Lanjutkan pemeriksaan rutin
+                        </span>
+                      </>
+                    ) : record.ai_prediction?.hasil_prediksi === "kurang" ? (
+                      <>
+                        <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
+                          <CheckCircle2 className="w-4 h-4 text-amber-500" />
+                          Tingkatkan asupan protein
+                        </span>
+                        <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
+                          <CheckCircle2 className="w-4 h-4 text-amber-500" />
+                          Pemeriksaan lebih sering
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
+                          <CheckCircle2 className="w-4 h-4 text-rose-500" />
+                          Konsultasi ke Puskesmas
+                        </span>
+                        <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
+                          <CheckCircle2 className="w-4 h-4 text-rose-500" />
+                          Pantau setiap 2 minggu
+                        </span>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

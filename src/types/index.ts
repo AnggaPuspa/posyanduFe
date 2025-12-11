@@ -44,19 +44,83 @@ export interface ResponAuth {
     token: string;
 }
 
+export interface Keluarga {
+    id: number;
+    nama_kepala_keluarga: string;
+    alamat?: string;
+    no_hp?: string;
+}
+
 export interface Anak {
     id: number;
-    nama: string;
+    nama_anak: string;
     nik: string;
     tanggal_lahir: string;
     jenis_kelamin: "L" | "P";
-    nama_ibu: string;
-    nama_ayah: string;
-    alamat: string;
-    no_hp_ortu: string;
-    foto?: string;
-    dibuat_pada: string;
-    diupdate_pada: string;
+    berat_lahir?: number;
+    tinggi_lahir?: number;
+    family_id: number;
+    family?: Keluarga;
+    status_gizi?: "normal" | "kuning" | "merah";
+    dibuat_pada?: string;
+    diupdate_pada?: string;
+}
+
+export interface DataBuatAnak {
+    nama_anak: string;
+    nik?: string;
+    tanggal_lahir: string;
+    jenis_kelamin: "L" | "P";
+    berat_lahir?: number;
+    tinggi_lahir?: number;
+    family_id: number;
+}
+
+export interface ParamPencarian {
+    q?: string;
+    page?: number;
+    per_page?: number;
+}
+
+export interface AIPrediction {
+    hasil_prediksi: string;
+    saran?: string;
+    is_verified: boolean;
+    z_score_bb_u?: number;
+    z_score_tb_u?: number;
+    z_score_bb_tb?: number;
+}
+
+export interface RecordPemeriksaan {
+    id: number;
+    child_id: number;
+    berat_badan: number;
+    tinggi_badan: number;
+    lingkar_kepala?: number;
+    lingkar_lengan?: number;
+    catatan?: string;
+    status?: string | null;
+    tanggal_periksa?: string;
+    created_at?: string;
+    updated_at?: string;
+    child?: Anak;
+    ai_prediction?: AIPrediction;
+}
+
+export interface DataKonfirmasiAI {
+    action: "accept" | "reject";
+    manual_status?: string;
+    manual_notes?: string;
+}
+
+export interface DataBuatRecord {
+    child_id: number;
+    tanggal_pemeriksaan: string;  // Format: YYYY-MM-DD
+    berat_badan: number;
+    tinggi_badan: number;
+    lingkar_kepala?: number;
+    lingkar_lengan?: number;
+    catatan?: string;
 }
 
 export interface Pemeriksaan {
@@ -102,4 +166,19 @@ export interface StatistikDashboard {
     anak_berisiko: number;
     anak_normal: number;
     anak_perlu_perhatian: number;
+}
+
+export interface DataPertumbuhan {
+    date: string;
+    age_months: number;
+    weight_kg: number;
+    height_cm?: number;
+    z_weight: number;
+    z_height: number;
+}
+
+export interface GrafikPertumbuhan {
+    anak_id: number;
+    nama_anak: string;
+    data: DataPertumbuhan[];
 }

@@ -20,12 +20,27 @@ const ambilToken = (): string | null => {
 export const simpanToken = (token: string): void => {
     if (typeof window !== "undefined") {
         localStorage.setItem("auth_token", token);
+
+        const isProduction = window.location.protocol === "https:";
+        const cookieOptions = [
+            `auth_token=${token}`,
+            "path=/",
+            "SameSite=Lax",
+            `max-age=${60 * 60 * 24 * 7}`, 
+        ];
+
+        if (isProduction) {
+            cookieOptions.push("Secure");
+        }
+
+        document.cookie = cookieOptions.join("; ");
     }
 };
 
 export const hapusToken = (): void => {
     if (typeof window !== "undefined") {
         localStorage.removeItem("auth_token");
+        document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
 };
 

@@ -1,0 +1,34 @@
+export const KONFIGURASI_AUTH = {
+    GAMBAR_LATAR: process.env.NEXT_PUBLIC_LOGIN_BG_IMAGE || "https://images.unsplash.com/photo-1584515933487-779824d29309?q=80&w=2070",
+    NAMA_TOKEN: "auth_token",
+    HALAMAN_DEFAULT: "/dashboard",
+    HALAMAN_LOGIN: "/login",
+    HALAMAN_SESUAI_ROLE: {
+        admin: "/dashboard",
+        kader: "/dashboard",
+        posyandu: "/dashboard",
+        orang_tua: "/beranda",
+        ortu: "/beranda",
+    } as Record<string, string>,
+} as const;
+
+export const PESAN_AUTH = {
+    JUDUL_HALAMAN: "Selamat Datang Kembali! 👋",
+    DESKRIPSI: "Masuk untuk mengelola data Posyandu Anda",
+    PLACEHOLDER_EMAIL: "nama@posyandu.id",
+    PLACEHOLDER_PASSWORD: "••••••••",
+    LABEL_EMAIL: "Email",
+    LABEL_PASSWORD: "Password",
+    LABEL_INGAT_SAYA: "Ingat saya di perangkat ini",
+    TOMBOL_MASUK: "Masuk",
+    LUPA_PASSWORD: "Lupa Password?",
+    BELUM_PUNYA_AKUN: "Belum punya akun?",
+    DAFTAR_SEKARANG: "Daftar Sekarang",
+    LOGIN_BERHASIL: "Login berhasil! Mengalihkan...",
+    KREDENSIAL_SALAH: "Email atau password salah",
+    TERJADI_KESALAHAN: "Terjadi kesalahan. Silakan coba lagi.",
+    HAK_CIPTA: "© 2025 Kementerian Kesehatan Republik Indonesia",
+    KUTIPAN: "Memantau tumbuh kembang anak kini semudah sentuhan jari.",
+    TAGLINE: "Platform Posyandu Digital Indonesia",
+    MEMERIKSA_LOGIN: "Memeriksa status login...",
+} as const;

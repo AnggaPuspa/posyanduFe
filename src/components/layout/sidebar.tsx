@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard, Users, ClipboardList, Brain, Bell, FileBarChart, Menu, X, LogOut } from "lucide-react";
+import { pakeKonteksAuth, ambilInisial, formatRole } from "@/contexts";
 
 const menuItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -17,14 +18,25 @@ const menuItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { user, sedangMemuat, keluar } = pakeKonteksAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const [sedangLogout, setSedangLogout] = useState(false);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
 
+  const handleLogout = async () => {
+    if (sedangLogout) return;
+    setSedangLogout(true);
+    await keluar();
+  };
+
+  const namaUser = user?.nama || "Memuat...";
+  const roleUser = user?.role ? formatRole(user.role) : "...";
+  const inisialUser = user?.nama ? ambilInisial(user.nama) : "??";
+
   return (
     <>
-      {/* Mobile Header */}
       <header className="lg:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between h-16 px-4 bg-white/90 backdrop-blur-xl border-b border-stone-200/60">
         <Link href="/dashboard" className="flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-white font-bold text-sm shadow-lg shadow-orange-200">
@@ -42,7 +54,6 @@ export function Sidebar() {
         </button>
       </header>
 
-      {/* Mobile Overlay */}
       {isOpen && (
         <div
           className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
@@ -50,7 +61,6 @@ export function Sidebar() {
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={cn(
           "fixed left-0 top-0 z-50 h-screen w-72 bg-white/95 backdrop-blur-xl border-r border-stone-200/60 transition-transform duration-300 ease-in-out",
@@ -58,7 +68,6 @@ export function Sidebar() {
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
       >
-        {/* Logo - Hidden on mobile (shown in header instead) */}
         <div className="hidden lg:flex h-20 items-center px-6">
           <Link href="/dashboard" className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-white font-bold text-lg shadow-lg shadow-orange-200">
@@ -71,7 +80,6 @@ export function Sidebar() {
           </Link>
         </div>
 
-        {/* Mobile: Close button area */}
         <div className="lg:hidden h-16 flex items-center justify-end px-4">
           <button
             onClick={closeSidebar}
@@ -81,7 +89,6 @@ export function Sidebar() {
           </button>
         </div>
 
-        {/* Navigation */}
         <nav className="flex flex-col gap-1.5 px-4 mt-4 lg:mt-0">
           {menuItems.map((item) => {
             const isActive = pathname === item.href;
@@ -105,19 +112,33 @@ export function Sidebar() {
           })}
         </nav>
 
-        {/* User Profile - Bottom */}
         <div className="absolute bottom-0 left-0 right-0 p-4">
           <div className="rounded-2xl bg-gradient-to-br from-stone-100 to-stone-50 p-4 border border-stone-200/60">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-teal-400 to-emerald-500 flex items-center justify-center text-white font-semibold text-sm shadow-lg shadow-emerald-200">
-                SR
+                {sedangMemuat ? (
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  inisialUser
+                )}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-stone-800 truncate" style={{ fontFamily: 'var(--font-nunito)' }}>Siti Rahayu</p>
-                <p className="text-xs text-stone-500 truncate">Kader Posyandu Mawar</p>
+                <p className="text-sm font-semibold text-stone-800 truncate" style={{ fontFamily: 'var(--font-nunito)' }}>
+                  {namaUser}
+                </p>
+                <p className="text-xs text-stone-500 truncate">{roleUser}</p>
               </div>
-              <button className="h-8 w-8 rounded-lg bg-stone-200/60 flex items-center justify-center text-stone-500 hover:bg-rose-100 hover:text-rose-500 transition-colors">
-                <LogOut className="w-4 h-4" />
+              <button 
+                onClick={handleLogout}
+                disabled={sedangLogout}
+                className="h-8 w-8 rounded-lg bg-stone-200/60 flex items-center justify-center text-stone-500 hover:bg-rose-100 hover:text-rose-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label="Keluar"
+              >
+                {sedangLogout ? (
+                  <div className="w-4 h-4 border-2 border-stone-400/30 border-t-stone-400 rounded-full animate-spin" />
+                ) : (
+                  <LogOut className="w-4 h-4" />
+                )}
               </button>
             </div>
           </div>

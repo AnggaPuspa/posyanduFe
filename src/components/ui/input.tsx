@@ -29,7 +29,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             type={type}
             className={cn(
-              "w-full h-12 rounded-2xl border bg-stone-50/50 text-sm transition-all",
+              "w-full h-12 rounded-2xl border bg-white text-stone-700 text-sm transition-all",
               "placeholder:text-stone-400",
               "focus:outline-none focus:ring-2 focus:ring-offset-0",
               icon ? "pl-11 pr-4" : "px-4",

@@ -20,7 +20,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         <textarea
           id={textareaId}
           className={cn(
-            "w-full px-4 py-3 rounded-2xl border bg-stone-50/50 text-sm transition-all resize-none",
+            "w-full px-4 py-3 rounded-2xl border bg-white text-stone-700 text-sm transition-all resize-none",
             "placeholder:text-stone-400",
             "focus:outline-none focus:ring-2 focus:ring-offset-0",
             error
