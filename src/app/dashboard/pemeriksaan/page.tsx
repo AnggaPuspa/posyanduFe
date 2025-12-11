@@ -273,7 +273,7 @@ export default function PemeriksaanPage() {
                   <div key={p.id} className="p-4 bg-stone-50 rounded-2xl space-y-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <Avatar name={p.child?.nama_anak || "?"} size="sm" />
+                        <Avatar name={p.child?.nama_anak || "?"} size="sm" jenisKelamin={p.child?.jenis_kelamin as "L" | "P"} />
                         <div>
                           <p className="font-semibold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>
                             {p.child?.nama_anak || "Anak tidak ditemukan"}
@@ -336,7 +336,7 @@ export default function PemeriksaanPage() {
                         <td className="py-4 px-4 text-sm text-stone-600">{formatTanggal(p.created_at || p.tanggal_periksa || "")}</td>
                         <td className="py-4 px-4">
                           <div className="flex items-center gap-3">
-                            <Avatar name={p.child?.nama_anak || "?"} size="sm" />
+                            <Avatar name={p.child?.nama_anak || "?"} size="sm" jenisKelamin={p.child?.jenis_kelamin as "L" | "P"} />
                             <span className="font-semibold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>
                               {p.child?.nama_anak || "-"}
                             </span>
@@ -404,7 +404,7 @@ export default function PemeriksaanPage() {
         {recordTerpilih && (
           <div className="space-y-6">
             <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-violet-50 to-purple-50 rounded-2xl">
-              <Avatar name={recordTerpilih.child?.nama_anak || "?"} size="lg" />
+              <Avatar name={recordTerpilih.child?.nama_anak || "?"} size="lg" jenisKelamin={recordTerpilih.child?.jenis_kelamin as "L" | "P"} />
               <div>
                 <h3 className="text-lg font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>
                   {recordTerpilih.child?.nama_anak || "Anak"}
@@ -547,7 +547,7 @@ export default function PemeriksaanPage() {
             </div>
 
             <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-violet-50 to-purple-50 rounded-2xl">
-              <Avatar name={recordBaru.child?.nama_anak || "?"} size="lg" />
+              <Avatar name={recordBaru.child?.nama_anak || "?"} size="lg" jenisKelamin={recordBaru.child?.jenis_kelamin as "L" | "P"} />
               <div>
                 <h3 className="text-lg font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>
                   {recordBaru.child?.nama_anak || "Anak"}

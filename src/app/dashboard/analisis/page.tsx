@@ -125,7 +125,7 @@ export default function AnalisisPage() {
               <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-4">
-                    <Avatar name={record.child?.nama_anak || "?"} size="lg" />
+                    <Avatar name={record.child?.nama_anak || "?"} size="lg" jenisKelamin={record.child?.jenis_kelamin as "L" | "P"} />
                     <div>
                       <CardTitle>{record.child?.nama_anak || "Anak"}</CardTitle>
                       <p className="text-sm text-stone-500">Pemeriksaan: {formatTanggal(record.created_at || record.tanggal_periksa || "")}</p>

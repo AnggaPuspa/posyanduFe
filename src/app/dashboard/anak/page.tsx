@@ -193,7 +193,7 @@ export default function DataAnakPage() {
                   <div key={anak.id} className="p-4 rounded-2xl bg-stone-50 border border-stone-100">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <Avatar name={anak.nama_anak} size="md" />
+                        <Avatar name={anak.nama_anak} size="md" jenisKelamin={anak.jenis_kelamin as "L" | "P"} />
                         <div>
                           <p className="font-semibold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>{anak.nama_anak}</p>
                           <p className="text-xs text-stone-500">{hitungUmur(anak.tanggal_lahir)} • {anak.jenis_kelamin === "L" ? "Laki-laki" : "Perempuan"}</p>
@@ -242,13 +242,13 @@ export default function DataAnakPage() {
                       <tr key={anak.id} className="border-b border-stone-50 hover:bg-stone-50/50 transition-colors">
                         <td className="py-4 px-4">
                           <div className="flex items-center gap-3">
-                            <Avatar name={anak.nama_anak} size="md" />
+                            <Avatar name={anak.nama_anak} size="md" jenisKelamin={anak.jenis_kelamin as "L" | "P"} />
                             <span className="font-semibold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>{anak.nama_anak}</span>
                           </div>
                         </td>
                         <td className="py-4 px-4 text-sm text-stone-600 font-mono">{anak.nik || "-"}</td>
                         <td className="py-4 px-4 text-sm text-stone-600">{hitungUmur(anak.tanggal_lahir)}</td>
-                        <td className="py-4 px-4 text-sm text-stone-600">{anak.jenis_kelamin === "L" ? "👦 Laki-laki" : "👧 Perempuan"}</td>
+                        <td className="py-4 px-4 text-sm text-stone-600">{anak.jenis_kelamin === "L" ? "Laki-laki" : "Perempuan"}</td>
                         <td className="py-4 px-4 text-sm text-stone-600">{anak.family?.nama_kepala_keluarga || "-"}</td>
                         <td className="py-4 px-4"><StatusBadge status={anak.status_gizi || "normal"} /></td>
                         <td className="py-4 px-4">
@@ -301,7 +301,7 @@ export default function DataAnakPage() {
         {anakTerpilih && (
           <div className="space-y-6">
             <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl">
-              <Avatar name={anakTerpilih.nama_anak} size="lg" />
+              <Avatar name={anakTerpilih.nama_anak} size="lg" jenisKelamin={anakTerpilih.jenis_kelamin as "L" | "P"} />
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <h3 className="text-xl font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>
@@ -310,7 +310,7 @@ export default function DataAnakPage() {
                   <StatusBadge status={anakTerpilih.status_gizi || "normal"} />
                 </div>
                 <p className="text-stone-500 text-sm">
-                  {anakTerpilih.jenis_kelamin === "L" ? "👦 Laki-laki" : "👧 Perempuan"} • {hitungUmur(anakTerpilih.tanggal_lahir)}
+                  {anakTerpilih.jenis_kelamin === "L" ? "Laki-laki" : "Perempuan"} • {hitungUmur(anakTerpilih.tanggal_lahir)}
                 </p>
               </div>
             </div>
@@ -399,10 +399,15 @@ export default function DataAnakPage() {
                 <Spinner size="lg" />
               </div>
             ) : qrCode ? (
-              <div 
-                className="mx-auto p-4 bg-white rounded-2xl border border-stone-200"
-                dangerouslySetInnerHTML={{ __html: qrCode }}
-              />
+              <div className="mx-auto p-4 bg-white rounded-2xl border border-stone-200">
+                {qrCode.startsWith("blob:") || qrCode.startsWith("http") || qrCode.startsWith("data:") ? (
+                  <img src={qrCode} alt="QR Code" className="w-48 h-48 mx-auto" />
+                ) : qrCode.startsWith("<svg") || qrCode.startsWith("<?xml") ? (
+                  <div dangerouslySetInnerHTML={{ __html: qrCode }} />
+                ) : (
+                  <img src={qrCode} alt="QR Code" className="w-48 h-48 mx-auto" />
+                )}
+              </div>
             ) : (
               <p className="text-stone-500 py-8">Gagal memuat QR Code</p>
             )}

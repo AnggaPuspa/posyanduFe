@@ -159,7 +159,7 @@ function PemeriksaanTerakhirCard({ data, loading }: { data: RecordPemeriksaan[];
           <div className="space-y-1.5 md:space-y-2">
             {data.slice(0, 5).map((item) => (
               <div key={item.id} className="flex items-center gap-2 md:gap-4 p-2 md:p-3 rounded-xl md:rounded-2xl transition-colors bg-stone-50/80 hover:bg-stone-100/80">
-                <Avatar name={item.child?.nama_anak || "?"} size="sm" />
+                <Avatar name={item.child?.nama_anak || "?"} size="sm" jenisKelamin={item.child?.jenis_kelamin as "L" | "P"} />
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm md:text-base text-stone-800 truncate" style={{ fontFamily: 'var(--font-nunito)' }}>
                     {item.child?.nama_anak || "Anak"}
@@ -201,11 +201,11 @@ function AnakTerbaruCard({ data, loading }: { data: Anak[]; loading: boolean }) 
           <div className="space-y-2 md:space-y-3">
             {data.slice(0, 4).map((item) => (
               <div key={item.id} className="flex items-center gap-3 md:gap-4 p-2 md:p-3 rounded-xl md:rounded-2xl bg-stone-50/80 hover:bg-stone-100/80 transition-colors">
-                <Avatar name={item.nama_anak} size="sm" />
+                <Avatar name={item.nama_anak} size="sm" jenisKelamin={item.jenis_kelamin as "L" | "P"} />
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm md:text-base text-stone-800 truncate" style={{ fontFamily: 'var(--font-nunito)' }}>{item.nama_anak}</p>
                   <p className="text-[11px] md:text-sm text-stone-500 truncate">
-                    {item.jenis_kelamin === "L" ? "👦" : "👧"} • {item.family?.nama_kepala_keluarga || "-"}
+                    {item.jenis_kelamin === "L" ? "Laki-laki" : "Perempuan"} • {item.family?.nama_kepala_keluarga || "-"}
                   </p>
                 </div>
               </div>

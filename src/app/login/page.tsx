@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useCallback, useEffect, FormEvent } from "react";
+import { useState, useCallback, useEffect, FormEvent, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Zap, Stethoscope, Users } from "lucide-react";
 import { Spinner } from "@/components/ui";
 import { authService } from "@/services";
 import { simpanToken } from "@/lib/api-client";
@@ -12,7 +12,7 @@ import { pakeToast } from "@/components/providers/toast-provider";
 import { KONFIGURASI_AUTH, PESAN_AUTH } from "@/config";
 import type { DataLogin, ErrorApi } from "@/types";
 
-export default function LoginPage() {
+function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { tampilkanSukses, tampilkanError } = pakeToast();
@@ -148,6 +148,26 @@ export default function LoginPage() {
                         <p className="text-slate-500">{PESAN_AUTH.DESKRIPSI}</p>
                     </div>
 
+                    <div className="flex items-center gap-3 mb-5">
+                        <span className="text-xs text-slate-400">Demo:</span>
+                        <button
+                            type="button"
+                            onClick={() => setFormData({ email: "pos1@example.com", password: "password" })}
+                            className="px-3 py-1.5 text-xs font-medium rounded-full border border-violet-200 bg-violet-50 text-violet-700 hover:bg-violet-100 transition-all flex items-center gap-1.5"
+                        >
+                            <Stethoscope className="w-3 h-3" />
+                            Kader
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setFormData({ email: "ortu1@example.com", password: "password" })}
+                            className="px-3 py-1.5 text-xs font-medium rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-all flex items-center gap-1.5"
+                        >
+                            <Users className="w-3 h-3" />
+                            Orang Tua
+                        </button>
+                    </div>
+
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <div className="space-y-2">
                             <label className="text-sm font-medium text-slate-700">{PESAN_AUTH.LABEL_EMAIL}</label>
@@ -238,5 +258,17 @@ export default function LoginPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-slate-50">
+                <Spinner size="lg" />
+            </div>
+        }>
+            <LoginForm />
+        </Suspense>
     );
 }

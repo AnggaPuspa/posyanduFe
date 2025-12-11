@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { User, Calendar, Scale, Ruler, Users } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { User, Calendar, Scale, Ruler, Users, Home } from "lucide-react";
 import { Button, Input, Select, Modal, Spinner } from "@/components/ui";
-import { childrenService } from "@/services";
+import { childrenService, familyService } from "@/services";
+import type { Family } from "@/services";
 import { pakeToast } from "@/components/providers/toast-provider";
 import type { Anak } from "@/types";
 
@@ -14,13 +15,15 @@ interface FormTambahAnakProps {
 }
 
 const JENIS_KELAMIN_OPTIONS = [
-  { value: "L", label: "👦 Laki-laki" },
-  { value: "P", label: "👧 Perempuan" },
+  { value: "L", label: "Laki-laki" },
+  { value: "P", label: "Perempuan" },
 ];
 
 export function FormTambahAnak({ buka, onTutup, onSukses }: FormTambahAnakProps) {
   const { tampilkanSukses, tampilkanError } = pakeToast();
   const [sedangSimpan, setSedangSimpan] = useState(false);
+  const [sedangMuatFamily, setSedangMuatFamily] = useState(false);
+  const [daftarFamily, setDaftarFamily] = useState<Family[]>([]);
 
   const [formData, setFormData] = useState({
     nama_anak: "",
@@ -29,8 +32,23 @@ export function FormTambahAnak({ buka, onTutup, onSukses }: FormTambahAnakProps)
     jenis_kelamin: "",
     berat_lahir: "",
     tinggi_lahir: "",
-    family_id: "1",
+    family_id: "",
   });
+
+  const muatFamily = useCallback(async () => {
+    setSedangMuatFamily(true);
+    try {
+      const result = await familyService.ambilDaftar();
+      const data = (result as any)?.data || result;
+      if (Array.isArray(data)) {
+        setDaftarFamily(data);
+      }
+    } catch (error) {
+      console.error("Error muat family:", error);
+    } finally {
+      setSedangMuatFamily(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (buka) {
@@ -41,14 +59,20 @@ export function FormTambahAnak({ buka, onTutup, onSukses }: FormTambahAnakProps)
         jenis_kelamin: "",
         berat_lahir: "",
         tinggi_lahir: "",
-        family_id: "1",
+        family_id: "",
       });
+      muatFamily();
     }
-  }, [buka]);
+  }, [buka, muatFamily]);
 
   const handleSubmit = async () => {
     if (!formData.nama_anak || !formData.tanggal_lahir || !formData.jenis_kelamin) {
       tampilkanError("Lengkapi nama, tanggal lahir, dan jenis kelamin");
+      return;
+    }
+
+    if (!formData.family_id) {
+      tampilkanError("Pilih keluarga/orang tua untuk anak ini");
       return;
     }
 
@@ -61,7 +85,7 @@ export function FormTambahAnak({ buka, onTutup, onSukses }: FormTambahAnakProps)
         jenis_kelamin: formData.jenis_kelamin as "L" | "P",
         berat_lahir: formData.berat_lahir ? parseFloat(formData.berat_lahir) : undefined,
         tinggi_lahir: formData.tinggi_lahir ? parseFloat(formData.tinggi_lahir) : undefined,
-        family_id: parseInt(formData.family_id) || 1,
+        family_id: parseInt(formData.family_id),
       };
       
       const result = await childrenService.buat(payload);
@@ -96,9 +120,27 @@ export function FormTambahAnak({ buka, onTutup, onSukses }: FormTambahAnakProps)
     }
   };
 
+  const familyOptions = daftarFamily.map(f => ({
+    value: String(f.id),
+    label: f.nama_kepala_keluarga + (f.no_hp ? ` (${f.no_hp.slice(-4)})` : ""),
+  }));
+
   return (
     <Modal buka={buka} onTutup={onTutup} judul="Tambah Data Anak Baru" ukuran="lg">
       <div className="space-y-5">
+        <div className="p-3 bg-violet-50 border border-violet-100 rounded-xl">
+          <Select 
+            label="Keluarga / Orang Tua" 
+            options={familyOptions}
+            placeholder={sedangMuatFamily ? "Memuat..." : "Pilih keluarga..."}
+            value={formData.family_id}
+            onChange={(e) => setFormData({ ...formData, family_id: e.target.value })}
+          />
+          <p className="text-xs text-violet-600 mt-2">
+            Pilih keluarga untuk menghubungkan anak dengan akun orang tua
+          </p>
+        </div>
+
         <div className="grid gap-5 md:grid-cols-2">
           <Input 
             label="Nama Anak" 

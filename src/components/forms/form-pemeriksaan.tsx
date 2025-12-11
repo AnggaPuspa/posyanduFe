@@ -104,7 +104,9 @@ export function FormPemeriksaan({ buka, onTutup, onSukses, childIdDefault }: For
 
   const anakOptions = daftarAnak.map(anak => ({
     value: String(anak.id),
-    label: anak.nama_anak,
+    label: anak.nik 
+      ? `${anak.nama_anak} (${anak.nik.slice(-4)})` 
+      : anak.nama_anak,
   }));
 
   return (

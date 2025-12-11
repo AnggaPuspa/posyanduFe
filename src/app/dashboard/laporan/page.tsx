@@ -3,19 +3,14 @@
 import { useState, useEffect, useCallback } from "react";
 import { FileSpreadsheet, FileText, Download, BarChart3, TrendingUp, Baby, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, Button, Badge, Spinner } from "@/components/ui";
-import { childrenService, recordsService } from "@/services";
+import { childrenService, recordsService, exportService } from "@/services";
 import { pakeToast } from "@/components/providers/toast-provider";
 import type { RecordPemeriksaan, Anak } from "@/types";
 
-const eksporList = [
-  { nama: "Laporan Bulanan", format: "Excel (.xlsx)", icon: FileSpreadsheet, warna: "from-emerald-400 to-teal-500", shadow: "shadow-emerald-200" },
-  { nama: "Rekap Pemeriksaan", format: "PDF", icon: FileText, warna: "from-rose-400 to-red-500", shadow: "shadow-rose-200" },
-  { nama: "Data Mentah", format: "CSV", icon: Download, warna: "from-sky-400 to-blue-500", shadow: "shadow-sky-200" },
-];
-
 export default function LaporanPage() {
-  const { tampilkanInfo } = pakeToast();
+  const { tampilkanInfo, tampilkanSukses, tampilkanError } = pakeToast();
   const [loading, setLoading] = useState(true);
+  const [downloading, setDownloading] = useState<string | null>(null);
   const [ringkasan, setRingkasan] = useState({
     bulan: new Date().toLocaleDateString("id-ID", { month: "long", year: "numeric" }),
     total_pemeriksaan: 0,
@@ -28,46 +23,70 @@ export default function LaporanPage() {
   const muatData = useCallback(async () => {
     setLoading(true);
     try {
-      // Muat data anak
       const anakResult = await childrenService.ambilDaftar({ per_page: 100 });
       const anakResponse = anakResult as any;
       let totalAnak = 0;
-      if (anakResponse?.data?.data) {
-        totalAnak = anakResponse.data.total || anakResponse.data.data.length;
+      let balitaBaru = 0;
+      
+      if (anakResponse?.data?.data && Array.isArray(anakResponse.data.data)) {
+        const anakList = anakResponse.data.data as Anak[];
+        totalAnak = anakResponse.data.total || anakList.length;
+        
+        const bulanIni = new Date();
+        const awalBulan = new Date(bulanIni.getFullYear(), bulanIni.getMonth(), 1);
+        
+        balitaBaru = anakList.filter(anak => {
+          const anakData = anak as any;
+          const tglDaftar = new Date(anakData.created_at || anak.tanggal_lahir);
+          return tglDaftar >= awalBulan;
+        }).length;
+      } else if (anakResponse?.data) {
+        totalAnak = anakResponse.data.total || 0;
       }
 
-      // Muat data pemeriksaan
       const recordResult = await recordsService.ambilDaftar({ per_page: 100 });
       const recordResponse = recordResult as any;
       let totalPemeriksaan = 0;
       let normal = 0, perluPerhatian = 0, berisiko = 0;
+      let pemeriksaanBulanIni = 0;
+      let pemeriksaanBulanLalu = 0;
+      
+      const bulanIni = new Date();
+      const awalBulanIni = new Date(bulanIni.getFullYear(), bulanIni.getMonth(), 1);
+      const awalBulanLalu = new Date(bulanIni.getFullYear(), bulanIni.getMonth() - 1, 1);
+      const akhirBulanLalu = new Date(bulanIni.getFullYear(), bulanIni.getMonth(), 0);
       
       if (recordResponse?.data?.data && Array.isArray(recordResponse.data.data)) {
         const records = recordResponse.data.data as RecordPemeriksaan[];
         totalPemeriksaan = recordResponse.data.total || records.length;
 
         records.forEach(r => {
-          const hasil = r.ai_prediction?.hasil_prediksi;
-          if (hasil === "normal") normal++;
-          else if (hasil === "kurang") perluPerhatian++;
-          else if (hasil === "buruk") berisiko++;
-        });
+          const hasil = r.ai_prediction?.hasil_prediksi?.toLowerCase();
+          if (hasil?.includes("normal") || hasil?.includes("baik") || hasil?.includes("sehat")) normal++;
+          else if (hasil?.includes("kurang") || hasil?.includes("lebih")) perluPerhatian++;
+          else if (hasil?.includes("buruk") || hasil?.includes("stunting")) berisiko++;
+          else normal++;
 
-        // Jika tidak ada data AI, estimasi
-        if (normal + perluPerhatian + berisiko === 0) {
-          normal = Math.floor(totalAnak * 0.85);
-          perluPerhatian = Math.floor(totalAnak * 0.10);
-          berisiko = totalAnak - normal - perluPerhatian;
-        }
+          const tglPeriksa = new Date(r.created_at || r.tanggal_periksa || "");
+          if (tglPeriksa >= awalBulanIni) {
+            pemeriksaanBulanIni++;
+          } else if (tglPeriksa >= awalBulanLalu && tglPeriksa <= akhirBulanLalu) {
+            pemeriksaanBulanLalu++;
+          }
+        });
       }
+
+      const pertumbuhan = pemeriksaanBulanLalu > 0 
+        ? Math.round(((pemeriksaanBulanIni - pemeriksaanBulanLalu) / pemeriksaanBulanLalu) * 100)
+        : pemeriksaanBulanIni > 0 ? 100 : 0;
 
       setRingkasan({
         bulan: new Date().toLocaleDateString("id-ID", { month: "long", year: "numeric" }),
         total_pemeriksaan: totalPemeriksaan,
-        balita_baru: Math.floor(totalAnak * 0.05), // Estimasi 5% balita baru
+        balita_baru: balitaBaru,
         total_anak: totalAnak,
         status: { normal, perlu_perhatian: perluPerhatian, berisiko },
-        pertumbuhanPersen: 15, // Placeholder
+        pertumbuhanPersen: pertumbuhan,
       });
     } catch (error) {
       console.error("Gagal memuat data laporan:", error);
@@ -79,6 +98,19 @@ export default function LaporanPage() {
   useEffect(() => {
     muatData();
   }, [muatData]);
+
+  const handleDownloadCSV = async () => {
+    setDownloading("csv");
+    try {
+      await exportService.downloadCSV();
+      tampilkanSukses("File CSV berhasil diunduh!");
+    } catch (error) {
+      console.error("Error download CSV:", error);
+      tampilkanError("Gagal mengunduh file CSV");
+    } finally {
+      setDownloading(null);
+    }
+  };
 
   const handleExport = (nama: string) => {
     tampilkanInfo(`Fitur ekspor ${nama} akan segera tersedia`);
@@ -130,7 +162,9 @@ export default function LaporanPage() {
                         <TrendingUp className="w-5 h-5 text-white" />
                       </div>
                       <div>
-                        <p className="text-2xl font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>+{ringkasan.pertumbuhanPersen}%</p>
+                        <p className="text-2xl font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>
+                          {ringkasan.pertumbuhanPersen >= 0 ? "+" : ""}{ringkasan.pertumbuhanPersen}%
+                        </p>
                         <p className="text-xs text-stone-500">vs Bulan Lalu</p>
                       </div>
                     </div>
@@ -173,26 +207,55 @@ export default function LaporanPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {eksporList.map((item, i) => {
-                const Icon = item.icon;
-                return (
-                  <Button 
-                    key={i} 
-                    variant="outline" 
-                    className="w-full justify-start gap-4 p-4 h-auto"
-                    onClick={() => handleExport(item.nama)}
-                  >
-                    <div className={`h-11 w-11 rounded-xl bg-gradient-to-br ${item.warna} flex items-center justify-center shadow-lg ${item.shadow}`}>
-                      <Icon className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="flex-1 text-left">
-                      <p className="font-semibold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>{item.nama}</p>
-                      <p className="text-xs text-stone-500">{item.format}</p>
-                    </div>
-                    <Download className="w-5 h-5 text-stone-400" />
-                  </Button>
-                );
-              })}
+              <Button 
+                variant="outline" 
+                className="w-full justify-start gap-4 p-4 h-auto"
+                onClick={() => handleExport("Laporan Bulanan")}
+              >
+                <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-200">
+                  <FileSpreadsheet className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="font-semibold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>Laporan Bulanan</p>
+                  <p className="text-xs text-stone-500">Excel (.xlsx)</p>
+                </div>
+                <Download className="w-5 h-5 text-stone-400" />
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="w-full justify-start gap-4 p-4 h-auto"
+                onClick={() => handleExport("Rekap Pemeriksaan")}
+              >
+                <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-rose-400 to-red-500 flex items-center justify-center shadow-lg shadow-rose-200">
+                  <FileText className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="font-semibold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>Rekap Pemeriksaan</p>
+                  <p className="text-xs text-stone-500">PDF</p>
+                </div>
+                <Download className="w-5 h-5 text-stone-400" />
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="w-full justify-start gap-4 p-4 h-auto"
+                onClick={handleDownloadCSV}
+                disabled={downloading === "csv"}
+              >
+                <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center shadow-lg shadow-sky-200">
+                  {downloading === "csv" ? (
+                    <Spinner size="sm" />
+                  ) : (
+                    <Download className="w-5 h-5 text-white" />
+                  )}
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="font-semibold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>Data Mentah</p>
+                  <p className="text-xs text-stone-500">CSV</p>
+                </div>
+                <Download className="w-5 h-5 text-stone-400" />
+              </Button>
             </div>
           </CardContent>
         </Card>

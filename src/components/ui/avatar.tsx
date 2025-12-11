@@ -1,10 +1,13 @@
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface AvatarProps {
   name: string;
   size?: "sm" | "md" | "lg" | "xl";
   gradient?: string;
   className?: string;
+  jenisKelamin?: "L" | "P";
+  useFoto?: boolean;
 }
 
 const sizeStyles = {
@@ -12,6 +15,13 @@ const sizeStyles = {
   md: "h-10 w-10 text-sm rounded-xl",
   lg: "h-12 w-12 text-base rounded-xl",
   xl: "h-16 w-16 text-xl rounded-2xl",
+};
+
+const imageSizes = {
+  sm: 32,
+  md: 40,
+  lg: 48,
+  xl: 64,
 };
 
 const gradients = [
@@ -39,9 +49,32 @@ function getGradient(name: string): string {
   return gradients[index];
 }
 
-export function Avatar({ name, size = "md", gradient, className }: AvatarProps) {
+export function Avatar({ name, size = "md", gradient, className, jenisKelamin, useFoto = true }: AvatarProps) {
   const initials = getInitials(name);
   const bg = gradient || getGradient(name);
+  const imgSize = imageSizes[size];
+
+  if (useFoto && jenisKelamin) {
+    const fotoSrc = jenisKelamin === "L" ? "/anakcowok.svg" : "/anakcewek.svg";
+    
+    return (
+      <div
+        className={cn(
+          "flex items-center justify-center overflow-hidden bg-gradient-to-br from-violet-100 to-purple-50",
+          sizeStyles[size],
+          className
+        )}
+      >
+        <Image 
+          src={fotoSrc} 
+          alt={name} 
+          width={imgSize} 
+          height={imgSize}
+          className="object-cover"
+        />
+      </div>
+    );
+  }
 
   return (
     <div
