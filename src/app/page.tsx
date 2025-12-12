@@ -335,10 +335,7 @@ export default function Home() {
         {/* Optional Overlay for better text contrast */}
         <div className="absolute inset-0 bg-black/10" />
         
-        {/* Decorative Floating Elements */}
-        <div className="absolute top-32 left-[15%] w-4 h-4 bg-white/30 rounded-full animate-pulse" />
-        <div className="absolute top-48 right-[20%] w-3 h-3 bg-white/20 rounded-full animate-pulse delay-300" />
-        <div className="absolute top-64 left-[30%] w-2 h-2 bg-white/25 rounded-full animate-pulse delay-500" />
+
 
         <div className="relative max-w-7xl mx-auto px-6 pt-16 pb-16">
           {/* Section Header */}
@@ -358,147 +355,24 @@ export default function Home() {
           </div>
 
           {/* Phone + White Card Stack Container */}
-          <div className="relative flex justify-center">
-            {/* Phone Mockup - extends from top through middle to bottom */}
+          <div className="relative flex justify-center mt-8">
+            {/* Phone Mockup - extends down past section */}
             <div className="relative">
               {/* Phone Shadow */}
-              <div 
-                className="absolute -inset-6 bg-black/20 blur-3xl"
-                style={{ borderRadius: '3rem 3rem 0 0' }}
-              />
+              <div className="absolute -inset-6 bg-black/20 blur-3xl rounded-[3rem]" />
               
-              {/* iPhone Frame */}
-              <div 
-                className="relative bg-slate-900 p-3 shadow-2xl"
-                style={{
-                  width: '320px',
-                  height: '500px',
-                  borderRadius: '2.5rem 2.5rem 0 0',
-                }}
-              >
-                {/* Dynamic Island */}
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full z-20" />
-                
-                {/* Screen */}
-                <div 
-                  className="relative w-full h-full bg-stone-50 overflow-hidden"
-                  style={{ borderRadius: '2rem 2rem 0 0' }}
-                >
-                  {/* Status Bar */}
-                  <div className="flex items-center justify-between px-6 py-2 pt-10 bg-white">
-                    <span className="text-xs font-medium text-slate-600">9:41</span>
-                    <div className="flex items-center gap-1">
-                      <div className="flex gap-0.5">
-                        {[1,2,3,4].map((i) => (
-                          <div key={i} className={`w-0.5 rounded-full bg-slate-700 ${i === 1 ? 'h-1' : i === 2 ? 'h-1.5' : i === 3 ? 'h-2' : 'h-2.5'}`} />
-                        ))}
-                      </div>
-                      <div className="w-4 h-2 border border-slate-700 rounded-sm ml-1">
-                        <div className="w-3/4 h-full bg-emerald-500 rounded-sm" />
-                      </div>
-                    </div>
-                  </div>
+              {/* Phone Image - Full phone visible, bottom extends into next section */}
+              <img 
+                src="/mockup-hp.png" 
+                alt="Mockup Aplikasi Posyandu" 
+                className="relative w-[320px] md:w-[380px] h-auto drop-shadow-2xl"
+                style={{ borderRadius: '3rem' }}
+              />
 
-                  {/* App Header */}
-                  <div className="px-4 py-2 bg-white border-b border-slate-100">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-bold text-slate-800" style={{ fontFamily: 'var(--font-nunito)' }}>Selamat Pagi! 👋</p>
-                        <p className="text-[10px] text-slate-500">Posyandu Mawar</p>
-                      </div>
-                      <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-sm">
-                        <Bell className="w-4 h-4 text-white" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Dashboard Content */}
-                  <div className="p-3 space-y-2 bg-stone-50">
-                    {/* Stats Row */}
-                    <div className="grid grid-cols-2 gap-2">
-                      {[
-                        { value: "168", label: "Balita", color: "from-sky-400 to-blue-500", icon: <Baby className="w-3 h-3 text-white" /> },
-                        { value: "94%", label: "Gizi Baik", color: "from-emerald-400 to-teal-500", icon: <TrendingUp className="w-3 h-3 text-white" /> },
-                      ].map((stat, i) => (
-                        <div key={i} className="p-2 bg-white rounded-lg border border-slate-100 shadow-sm">
-                          <div className={`h-5 w-5 rounded bg-gradient-to-br ${stat.color} mb-1 flex items-center justify-center`}>
-                            {stat.icon}
-                          </div>
-                          <div className="text-sm font-bold text-slate-800">{stat.value}</div>
-                          <div className="text-[8px] text-slate-500">{stat.label}</div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Chart */}
-                    <div className="p-2 bg-white rounded-lg border border-slate-100 shadow-sm">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-[9px] font-semibold text-slate-700">Pertumbuhan Bulanan</span>
-                        <span className="text-[7px] text-emerald-600 font-medium bg-emerald-50 px-1 py-0.5 rounded">+15%</span>
-                      </div>
-                      <div className="flex items-end gap-0.5" style={{ height: '40px' }}>
-                        {[35, 42, 38, 55, 52, 65, 72, 68, 78, 85, 88, 95].map((h, i) => (
-                          <div 
-                            key={i} 
-                            className="flex-1 bg-gradient-to-t from-emerald-500 to-teal-400 rounded-t-sm" 
-                            style={{ height: `${h}%` }} 
-                          />
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* More content cards */}
-                    <div className="p-2 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg shadow">
-                      <div className="flex items-center gap-1.5 mb-0.5">
-                        <Sparkles className="w-3 h-3 text-white" />
-                        <span className="text-[8px] font-semibold text-white">Analisis AI</span>
-                      </div>
-                      <p className="text-[7px] text-violet-100">3 balita perlu perhatian khusus</p>
-                    </div>
-
-                    <div className="p-2 bg-white rounded-lg border border-slate-100 shadow-sm">
-                      <div className="flex items-center gap-2">
-                        <div className="h-6 w-6 rounded bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
-                          <BarChart3 className="w-3 h-3 text-white" />
-                        </div>
-                        <div>
-                          <p className="text-[9px] font-semibold text-slate-700">Jadwal Posyandu</p>
-                          <p className="text-[7px] text-slate-500">Minggu depan</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="p-2 bg-white rounded-lg border border-slate-100 shadow-sm">
-                      <div className="flex items-center gap-2">
-                        <div className="h-6 w-6 rounded bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center">
-                          <Users className="w-3 h-3 text-white" />
-                        </div>
-                        <div>
-                          <p className="text-[9px] font-semibold text-slate-700">Kunjungan Hari Ini</p>
-                          <p className="text-[7px] text-slate-500">12 balita</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="p-2 bg-white rounded-lg border border-slate-100 shadow-sm">
-                      <div className="flex items-center gap-2">
-                        <div className="h-6 w-6 rounded bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
-                          <Activity className="w-3 h-3 text-white" />
-                        </div>
-                        <div>
-                          <p className="text-[9px] font-semibold text-slate-700">Imunisasi</p>
-                          <p className="text-[7px] text-slate-500">5 balita perlu vaksin</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* White Feature Card - Positioned at MIDDLE of phone */}
+              {/* White Feature Card - Positioned in middle of phone */}
               <div 
                 className="absolute left-1/2 -translate-x-1/2 z-20"
-                style={{ top: '45%' }}
+                style={{ top: '40%' }}
               >
                 <div 
                   className="bg-white shadow-2xl"
@@ -594,19 +468,85 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Transition Section - Light Teal */}
-      <section className="relative bg-gradient-to-b from-teal-100 to-teal-50 py-12 -mt-32">
-        {/* Section content */}
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <p className="text-sm font-medium text-teal-700 uppercase tracking-wider mb-2">
+      {/* Testimonial Section - JAKI Style */}
+      <section className="relative z-10 bg-gradient-to-b from-teal-100 to-teal-50 py-16 -mt-32 pt-20">
+        {/* Section Header */}
+        <div className="max-w-6xl mx-auto px-6 text-center mb-12">
+          <p className="text-sm font-semibold text-teal-700 uppercase tracking-[3px] mb-3">
             Testimonial
           </p>
-          <h3 className="text-2xl md:text-3xl font-bold text-slate-800 mb-4" style={{ fontFamily: 'var(--font-nunito)' }}>
-            Dipercaya oleh Ribuan Kader Posyandu
+          <h3 className="text-3xl md:text-4xl font-bold text-slate-800" style={{ fontFamily: 'var(--font-nunito)' }}>
+            Kata Mereka tentang Posyandu+
           </h3>
-          <p className="text-slate-600 max-w-xl mx-auto">
-            Bergabung dengan komunitas kader yang telah merasakan kemudahan menggunakan platform digital Posyandu.
-          </p>
+        </div>
+
+        {/* Testimonial Cards - Stacked Layout */}
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="relative flex flex-wrap justify-center items-start gap-4 md:gap-0">
+            {/* Card 1 - White */}
+            <div className="w-full md:w-64 bg-white rounded-2xl p-5 shadow-lg md:-rotate-3 md:translate-y-8 z-10">
+              <div className="flex items-center gap-2 mb-3">
+                <img 
+                  src="https://api.dicebear.com/7.x/lorelei/svg?seed=Siti&backgroundColor=fce7f3" 
+                  alt="Siti Rahayu"
+                  className="w-10 h-10 rounded-full bg-pink-100"
+                />
+                <span className="text-sm font-semibold text-slate-700">Siti Rahayu</span>
+              </div>
+              <p className="text-emerald-600 font-bold text-sm mb-2">"Sangat membantu!"</p>
+              <p className="text-slate-600 text-xs leading-relaxed">
+                Sebagai kader, saya jadi lebih mudah mencatat data balita. Tidak perlu buku tebal lagi, semua ada di HP.
+              </p>
+            </div>
+
+            {/* Card 2 - Light Green */}
+            <div className="w-full md:w-64 bg-emerald-50 rounded-2xl p-5 shadow-lg md:rotate-2 md:-translate-x-4 z-20">
+              <div className="flex items-center gap-2 mb-3">
+                <img 
+                  src="https://api.dicebear.com/7.x/lorelei/svg?seed=Dewi&backgroundColor=d1fae5" 
+                  alt="Dewi Kartika"
+                  className="w-10 h-10 rounded-full bg-emerald-100"
+                />
+                <span className="text-sm font-semibold text-slate-700">Dewi Kartika</span>
+              </div>
+              <p className="text-emerald-600 font-bold text-sm mb-2">"Deteksi dini stunting"</p>
+              <p className="text-slate-600 text-xs leading-relaxed">
+                Fitur AI-nya keren banget! Bisa langsung tahu kalau ada balita yang perlu perhatian khusus. Intervensi jadi lebih cepat.
+              </p>
+            </div>
+
+            {/* Card 3 - Light Yellow */}
+            <div className="w-full md:w-64 bg-amber-50 rounded-2xl p-5 shadow-lg md:-rotate-2 md:translate-y-12 z-30">
+              <div className="flex items-center gap-2 mb-3">
+                <img 
+                  src="https://api.dicebear.com/7.x/lorelei/svg?seed=Rina&backgroundColor=fef3c7" 
+                  alt="Rina Wulandari"
+                  className="w-10 h-10 rounded-full bg-amber-100"
+                />
+                <span className="text-sm font-semibold text-slate-700">Rina Wulandari</span>
+              </div>
+              <p className="text-emerald-600 font-bold text-sm mb-2">"Laporan jadi mudah"</p>
+              <p className="text-slate-600 text-xs leading-relaxed">
+                Dulu bikin laporan bulanan bisa seharian. Sekarang tinggal klik, langsung jadi. Hemat waktu banget!
+              </p>
+            </div>
+
+            {/* Card 4 - Light Purple */}
+            <div className="w-full md:w-64 bg-violet-100 rounded-2xl p-5 shadow-lg md:rotate-3 md:-translate-x-2 md:translate-y-4 z-40">
+              <div className="flex items-center gap-2 mb-3">
+                <img 
+                  src="https://api.dicebear.com/7.x/lorelei/svg?seed=Ani&backgroundColor=ede9fe" 
+                  alt="Ani Suryani"
+                  className="w-10 h-10 rounded-full bg-violet-100"
+                />
+                <span className="text-sm font-semibold text-slate-700">Ani Suryani</span>
+              </div>
+              <p className="text-emerald-600 font-bold text-sm mb-2">"Orang tua senang"</p>
+              <p className="text-slate-600 text-xs leading-relaxed">
+                Orang tua balita bisa pantau perkembangan anaknya dari HP. Mereka jadi lebih aware soal gizi dan kesehatan anak.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
