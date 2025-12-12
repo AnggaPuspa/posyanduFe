@@ -9,6 +9,7 @@ export const KONFIGURASI_AUTH = {
         posyandu: "/dashboard",
         orang_tua: "/beranda",
         ortu: "/beranda",
+        masyarakat: "/beranda",
     } as Record<string, string>,
 } as const;
 

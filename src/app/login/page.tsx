@@ -25,14 +25,27 @@ function LoginForm() {
     const [sedangMengecekAuth, setSedangMengecekAuth] = useState(true);
 
     useEffect(() => {
-        if (typeof window !== "undefined") {
-            const token = localStorage.getItem(KONFIGURASI_AUTH.NAMA_TOKEN);
-            if (token) {
-                router.replace(searchParams.get("kembali") || KONFIGURASI_AUTH.HALAMAN_DEFAULT);
-                return;
+        const cekAuthDanRedirect = async () => {
+            if (typeof window !== "undefined") {
+                const token = localStorage.getItem(KONFIGURASI_AUTH.NAMA_TOKEN);
+                if (token) {
+                    try {
+                        // Ambil profil untuk dapat role user
+                        const user = await authService.ambilProfil();
+                        const halamanTujuan = searchParams.get("kembali") || 
+                            KONFIGURASI_AUTH.HALAMAN_SESUAI_ROLE[user.role] || 
+                            KONFIGURASI_AUTH.HALAMAN_DEFAULT;
+                        router.replace(halamanTujuan);
+                        return;
+                    } catch {
+                        // Token invalid, lanjut ke form login
+                    }
+                }
             }
-        }
-        setSedangMengecekAuth(false);
+            setSedangMengecekAuth(false);
+        };
+        
+        cekAuthDanRedirect();
     }, [router, searchParams]);
 
     const handleChange = useCallback((field: keyof typeof formData) => (

@@ -13,11 +13,9 @@ export default function BerandaLayout({ children }: { children: React.ReactNode 
           <div className="md:ml-72">
             <header className="sticky top-0 z-30 flex h-14 md:h-20 items-center justify-between bg-stone-50/90 backdrop-blur-xl px-4 md:px-8 border-b md:border-b-0 border-stone-200/60">
               <div className="flex items-center gap-3">
-                <div className="md:hidden flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 text-white font-bold text-sm shadow-md">
-                  P
-                </div>
+                <img src="/logo.svg" alt="Logo" className="md:hidden h-9 w-9" />
                 <h1 className="text-base md:text-lg font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>
-                  <span className="md:hidden">Posyandu Pintar</span>
+                  <span className="md:hidden">Posyandu Plus</span>
                   <span className="hidden md:inline">Portal Orang Tua</span>
                 </h1>
               </div>

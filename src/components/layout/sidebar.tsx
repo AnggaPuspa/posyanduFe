@@ -39,11 +39,9 @@ export function Sidebar() {
     <>
       <header className="lg:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between h-16 px-4 bg-white/90 backdrop-blur-xl border-b border-stone-200/60">
         <Link href="/dashboard" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-white font-bold text-sm shadow-lg shadow-orange-200">
-            P
-          </div>
+          <img src="/logo.svg" alt="Logo" className="h-9 w-9" />
           <span className="text-base font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>
-            Posyandu<span className="text-orange-500"> Pintar</span>
+            Posyandu<span className="text-orange-500"> Plus</span>
           </span>
         </Link>
         <button
@@ -70,12 +68,10 @@ export function Sidebar() {
       >
         <div className="hidden lg:flex h-20 items-center px-6">
           <Link href="/dashboard" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-white font-bold text-lg shadow-lg shadow-orange-200">
-              P
-            </div>
+            <img src="/logo.svg" alt="Logo" className="h-11 w-11" />
             <div>
               <span className="text-lg font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>Posyandu</span>
-              <span className="text-lg font-bold text-orange-500" style={{ fontFamily: 'var(--font-nunito)' }}> Pintar</span>
+              <span className="text-lg font-bold text-orange-500" style={{ fontFamily: 'var(--font-nunito)' }}> Plus</span>
             </div>
           </Link>
         </div>

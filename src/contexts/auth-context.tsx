@@ -95,6 +95,7 @@ export function formatRole(role: string): string {
         posyandu: "Kader Posyandu",
         orang_tua: "Orang Tua",
         ortu: "Orang Tua",
+        masyarakat: "Masyarakat",
     };
     return roleMap[role] || role;
 }

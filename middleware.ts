@@ -18,9 +18,9 @@ export function middleware(request: NextRequest) {
         return NextResponse.redirect(urlLogin);
     }
 
-    if (token && adalahRuteAuth) {
-        return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
+    // Jangan redirect otomatis dari halaman auth jika sudah login
+    // Biarkan halaman login handle redirect berdasarkan role user
+    // Ini mencegah user ortu di-redirect ke /dashboard
 
     return NextResponse.next();
 }

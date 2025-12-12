@@ -324,7 +324,7 @@ export default function DashboardPage() {
             </div>
             <div className="min-w-0">
               <p className="text-white/80 text-xs md:text-sm font-medium">Dashboard Posyandu</p>
-              <p className="text-base md:text-xl font-bold truncate" style={{ fontFamily: 'var(--font-nunito)' }}>Posyandu Pintar - Pantau Tumbuh Kembang Anak</p>
+              <p className="text-base md:text-xl font-bold truncate" style={{ fontFamily: 'var(--font-nunito)' }}>Posyandu Plus - Pantau Tumbuh Kembang Anak</p>
               <p className="text-white/80 text-xs md:text-sm mt-0.5 truncate">Monitoring kesehatan balita dengan teknologi AI</p>
             </div>
           </div>

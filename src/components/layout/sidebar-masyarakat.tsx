@@ -73,12 +73,10 @@ export function SidebarMasyarakat() {
       <aside className="hidden md:block fixed left-0 top-0 z-40 h-screen w-72 bg-white/80 backdrop-blur-xl border-r border-stone-200/60">
         <div className="flex h-20 items-center px-6">
           <Link href="/beranda" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 text-white font-bold text-lg shadow-lg shadow-emerald-200">
-              P
-            </div>
+            <img src="/logo.svg" alt="Logo" className="h-11 w-11" />
             <div>
               <span className="text-lg font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>Posyandu</span>
-              <span className="text-lg font-bold text-emerald-500" style={{ fontFamily: 'var(--font-nunito)' }}> Pintar</span>
+              <span className="text-lg font-bold text-emerald-500" style={{ fontFamily: 'var(--font-nunito)' }}> Plus</span>
             </div>
           </Link>
         </div>

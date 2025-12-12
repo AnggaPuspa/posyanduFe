@@ -17,7 +17,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Posyandu Pintar",
+  title: "Posyandu Plus",
   description: "Sistem Informasi Posyandu Digital",
 };
 
