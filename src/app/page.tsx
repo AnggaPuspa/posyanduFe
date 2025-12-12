@@ -319,6 +319,122 @@ export default function Home() {
         </div>
       </section>
 
+      <section id="fitur" className="relative py-20 md:py-28 bg-gradient-to-b from-white via-stone-50 to-white overflow-hidden">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-emerald-100/40 to-teal-100/40 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-gradient-to-br from-amber-100/40 to-orange-100/40 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
+
+        <div className="relative max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 rounded-full mb-6">
+              <Sparkles className="w-4 h-4 text-emerald-600" />
+              <span className="text-sm font-medium text-emerald-700">Fitur Unggulan</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-stone-800 mb-4" style={{ fontFamily: 'var(--font-nunito)' }}>
+              Solusi Lengkap untuk Posyandu Modern
+            </h2>
+            <p className="text-lg text-stone-600 max-w-2xl mx-auto">
+              Dari pencatatan hingga analisis AI, semua dalam satu platform yang mudah digunakan
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="group relative p-6 bg-white rounded-2xl border border-stone-100 shadow-sm hover:shadow-xl hover:border-emerald-200 transition-all duration-300">
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center mb-4 shadow-lg shadow-emerald-400/20 group-hover:scale-110 transition-transform">
+                <Baby className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-bold text-stone-800 mb-2" style={{ fontFamily: 'var(--font-nunito)' }}>Manajemen Data Balita</h3>
+              <p className="text-sm text-stone-600 leading-relaxed">
+                Kelola data balita lengkap dengan NIK, riwayat pertumbuhan, dan status gizi. Pencarian cepat dan filter berdasarkan usia atau status.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="px-2 py-1 text-xs bg-emerald-50 text-emerald-700 rounded-full">Profil Lengkap</span>
+                <span className="px-2 py-1 text-xs bg-emerald-50 text-emerald-700 rounded-full">QR Code</span>
+              </div>
+            </div>
+
+            <div className="group relative p-6 bg-white rounded-2xl border border-stone-100 shadow-sm hover:shadow-xl hover:border-sky-200 transition-all duration-300">
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center mb-4 shadow-lg shadow-sky-400/20 group-hover:scale-110 transition-transform">
+                <Activity className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-bold text-stone-800 mb-2" style={{ fontFamily: 'var(--font-nunito)' }}>Pemeriksaan Digital</h3>
+              <p className="text-sm text-stone-600 leading-relaxed">
+                Catat hasil penimbangan dan pengukuran secara real-time. Hitung otomatis Z-Score dan status gizi berdasarkan standar WHO.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="px-2 py-1 text-xs bg-sky-50 text-sky-700 rounded-full">Berat Badan</span>
+                <span className="px-2 py-1 text-xs bg-sky-50 text-sky-700 rounded-full">Tinggi Badan</span>
+              </div>
+            </div>
+
+            <div className="group relative p-6 bg-white rounded-2xl border border-stone-100 shadow-sm hover:shadow-xl hover:border-violet-200 transition-all duration-300">
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center mb-4 shadow-lg shadow-violet-400/20 group-hover:scale-110 transition-transform">
+                <Sparkles className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-bold text-stone-800 mb-2" style={{ fontFamily: 'var(--font-nunito)' }}>Analisis AI Stunting</h3>
+              <p className="text-sm text-stone-600 leading-relaxed">
+                Deteksi dini risiko stunting dengan kecerdasan buatan. Dapatkan rekomendasi intervensi gizi yang personal dan akurat.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="px-2 py-1 text-xs bg-violet-50 text-violet-700 rounded-full">Prediksi Risiko</span>
+                <span className="px-2 py-1 text-xs bg-violet-50 text-violet-700 rounded-full">Rekomendasi</span>
+              </div>
+            </div>
+
+            <div className="group relative p-6 bg-white rounded-2xl border border-stone-100 shadow-sm hover:shadow-xl hover:border-amber-200 transition-all duration-300">
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-4 shadow-lg shadow-amber-400/20 group-hover:scale-110 transition-transform">
+                <BarChart3 className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-bold text-stone-800 mb-2" style={{ fontFamily: 'var(--font-nunito)' }}>Grafik Pertumbuhan</h3>
+              <p className="text-sm text-stone-600 leading-relaxed">
+                Visualisasi tren pertumbuhan balita dengan grafik interaktif. Bandingkan dengan kurva standar WHO secara real-time.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="px-2 py-1 text-xs bg-amber-50 text-amber-700 rounded-full">BB/U</span>
+                <span className="px-2 py-1 text-xs bg-amber-50 text-amber-700 rounded-full">TB/U</span>
+                <span className="px-2 py-1 text-xs bg-amber-50 text-amber-700 rounded-full">BB/TB</span>
+              </div>
+            </div>
+
+            <div className="group relative p-6 bg-white rounded-2xl border border-stone-100 shadow-sm hover:shadow-xl hover:border-rose-200 transition-all duration-300">
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center mb-4 shadow-lg shadow-rose-400/20 group-hover:scale-110 transition-transform">
+                <Users className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-bold text-stone-800 mb-2" style={{ fontFamily: 'var(--font-nunito)' }}>Portal Orang Tua</h3>
+              <p className="text-sm text-stone-600 leading-relaxed">
+                Akses khusus bagi orang tua untuk memantau perkembangan anak. Lihat riwayat pemeriksaan dan hasil analisis AI dari ponsel.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="px-2 py-1 text-xs bg-rose-50 text-rose-700 rounded-full">Mobile Friendly</span>
+                <span className="px-2 py-1 text-xs bg-rose-50 text-rose-700 rounded-full">Notifikasi</span>
+              </div>
+            </div>
+
+            <div className="group relative p-6 bg-white rounded-2xl border border-stone-100 shadow-sm hover:shadow-xl hover:border-cyan-200 transition-all duration-300">
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-cyan-400 to-teal-500 flex items-center justify-center mb-4 shadow-lg shadow-cyan-400/20 group-hover:scale-110 transition-transform">
+                <Building2 className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-bold text-stone-800 mb-2" style={{ fontFamily: 'var(--font-nunito)' }}>Laporan & Ekspor</h3>
+              <p className="text-sm text-stone-600 leading-relaxed">
+                Generate laporan bulanan otomatis. Ekspor data ke CSV untuk kebutuhan pelaporan Puskesmas dan Dinas Kesehatan.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="px-2 py-1 text-xs bg-cyan-50 text-cyan-700 rounded-full">CSV Export</span>
+                <span className="px-2 py-1 text-xs bg-cyan-50 text-cyan-700 rounded-full">Dashboard</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-12 text-center">
+            <Link href="/dashboard">
+              <Button size="lg" className="shadow-lg">
+                Jelajahi Semua Fitur
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section - Compact Pop-Out Card */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 bg-stone-100 overflow-visible">
         <div className="max-w-6xl mx-auto px-6">

@@ -20,10 +20,11 @@ const JENIS_KELAMIN_OPTIONS = [
 ];
 
 export function FormTambahAnak({ buka, onTutup, onSukses }: FormTambahAnakProps) {
-  const { tampilkanSukses, tampilkanError } = pakeToast();
+  const { tampilkanSukses, tampilkanError, tampilkanInfo } = pakeToast();
   const [sedangSimpan, setSedangSimpan] = useState(false);
   const [sedangMuatFamily, setSedangMuatFamily] = useState(false);
   const [daftarFamily, setDaftarFamily] = useState<Family[]>([]);
+  const [errorMuatFamily, setErrorMuatFamily] = useState(false);
 
   const [formData, setFormData] = useState({
     nama_anak: "",
@@ -33,22 +34,29 @@ export function FormTambahAnak({ buka, onTutup, onSukses }: FormTambahAnakProps)
     berat_lahir: "",
     tinggi_lahir: "",
     family_id: "",
+    family_id_manual: "",
   });
 
   const muatFamily = useCallback(async () => {
     setSedangMuatFamily(true);
+    setErrorMuatFamily(false);
     try {
       const result = await familyService.ambilDaftar();
       const data = (result as any)?.data || result;
       if (Array.isArray(data)) {
         setDaftarFamily(data);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error muat family:", error);
+      setErrorMuatFamily(true);
+      // Jika 401, mungkin session expired
+      if (error?.status === 401) {
+        tampilkanInfo("Sesi mungkin expired. Silakan refresh halaman atau login ulang.");
+      }
     } finally {
       setSedangMuatFamily(false);
     }
-  }, []);
+  }, [tampilkanInfo]);
 
   useEffect(() => {
     if (buka) {
@@ -60,6 +68,7 @@ export function FormTambahAnak({ buka, onTutup, onSukses }: FormTambahAnakProps)
         berat_lahir: "",
         tinggi_lahir: "",
         family_id: "",
+        family_id_manual: "",
       });
       muatFamily();
     }
@@ -71,8 +80,9 @@ export function FormTambahAnak({ buka, onTutup, onSukses }: FormTambahAnakProps)
       return;
     }
 
-    if (!formData.family_id) {
-      tampilkanError("Pilih keluarga/orang tua untuk anak ini");
+    const familyId = formData.family_id || formData.family_id_manual;
+    if (!familyId) {
+      tampilkanError("Pilih atau masukkan ID keluarga untuk anak ini");
       return;
     }
 
@@ -85,7 +95,7 @@ export function FormTambahAnak({ buka, onTutup, onSukses }: FormTambahAnakProps)
         jenis_kelamin: formData.jenis_kelamin as "L" | "P",
         berat_lahir: formData.berat_lahir ? parseFloat(formData.berat_lahir) : undefined,
         tinggi_lahir: formData.tinggi_lahir ? parseFloat(formData.tinggi_lahir) : undefined,
-        family_id: parseInt(formData.family_id),
+        family_id: parseInt(familyId),
       };
       
       const result = await childrenService.buat(payload);
@@ -122,23 +132,58 @@ export function FormTambahAnak({ buka, onTutup, onSukses }: FormTambahAnakProps)
 
   const familyOptions = daftarFamily.map(f => ({
     value: String(f.id),
-    label: f.nama_kepala_keluarga + (f.no_hp ? ` (${f.no_hp.slice(-4)})` : ""),
+    label: f.nama_kepala_keluarga + (f.no_hp ? ` (${f.no_hp.slice(-4)})` : ` - ID: ${f.id}`),
   }));
 
   return (
     <Modal buka={buka} onTutup={onTutup} judul="Tambah Data Anak Baru" ukuran="lg">
       <div className="space-y-5">
         <div className="p-3 bg-violet-50 border border-violet-100 rounded-xl">
-          <Select 
-            label="Keluarga / Orang Tua" 
-            options={familyOptions}
-            placeholder={sedangMuatFamily ? "Memuat..." : "Pilih keluarga..."}
-            value={formData.family_id}
-            onChange={(e) => setFormData({ ...formData, family_id: e.target.value })}
-          />
-          <p className="text-xs text-violet-600 mt-2">
-            Pilih keluarga untuk menghubungkan anak dengan akun orang tua
-          </p>
+          {errorMuatFamily ? (
+            <>
+              <p className="text-sm text-amber-700 mb-2">
+                ⚠️ Gagal memuat daftar keluarga. Masukkan Family ID secara manual:
+              </p>
+              <Input 
+                label="Family ID" 
+                type="number"
+                placeholder="Masukkan ID keluarga"
+                icon={<Home className="w-4 h-4" />}
+                value={formData.family_id_manual}
+                onChange={(e) => setFormData({ ...formData, family_id_manual: e.target.value, family_id: "" })}
+                hint="Dapatkan Family ID dari halaman Data Keluarga"
+              />
+            </>
+          ) : familyOptions.length > 0 ? (
+            <>
+              <Select 
+                label="Keluarga / Orang Tua" 
+                options={familyOptions}
+                placeholder={sedangMuatFamily ? "Memuat..." : "Pilih keluarga..."}
+                value={formData.family_id}
+                onChange={(e) => setFormData({ ...formData, family_id: e.target.value, family_id_manual: "" })}
+              />
+              <p className="text-xs text-violet-600 mt-2">
+                Pilih keluarga untuk menghubungkan anak dengan akun orang tua
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-sm text-amber-700 mb-2">
+                {sedangMuatFamily ? "Memuat daftar keluarga..." : "Belum ada data keluarga. Buat keluarga di menu Tambah Keluarga atau masukkan ID manual:"}
+              </p>
+              {!sedangMuatFamily && (
+                <Input 
+                  label="Family ID (Manual)" 
+                  type="number"
+                  placeholder="Masukkan ID keluarga"
+                  icon={<Home className="w-4 h-4" />}
+                  value={formData.family_id_manual}
+                  onChange={(e) => setFormData({ ...formData, family_id_manual: e.target.value, family_id: "" })}
+                />
+              )}
+            </>
+          )}
         </div>
 
         <div className="grid gap-5 md:grid-cols-2">

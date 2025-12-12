@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Search, Filter, Plus, Eye, Pencil, Trash2, ChevronLeft, ChevronRight, Baby, Calendar, User, TrendingUp, QrCode, X } from "lucide-react";
 import { Card, CardContent, Button, Input, Avatar, StatusBadge, Modal, Spinner } from "@/components/ui";
 import { GrafikPertumbuhan } from "@/components/charts";
-import { FormTambahAnak } from "@/components/forms";
+import { FormTambahAnak, FormTambahKeluarga } from "@/components/forms";
 import { childrenService } from "@/services";
 import { pakeToast } from "@/components/providers/toast-provider";
 import type { Anak, ResponPaginasi } from "@/types";
@@ -46,6 +46,9 @@ export default function DataAnakPage() {
 
   // Form tambah anak (menggunakan komponen global)
   const [modalTambahAnak, setModalTambahAnak] = useState(false);
+  
+  // Form tambah keluarga
+  const [modalTambahKeluarga, setModalTambahKeluarga] = useState(false);
 
   const muatData = useCallback(async () => {
     setSedangMemuat(true);
@@ -144,11 +147,26 @@ export default function DataAnakPage() {
           <h1 className="text-xl md:text-2xl font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>Data Balita</h1>
           <p className="text-sm md:text-base text-stone-500 mt-1">Kelola data balita yang terdaftar di Posyandu</p>
         </div>
-        <Button className="w-full sm:w-auto" onClick={() => setModalTambahAnak(true)}>
-          <Plus className="w-5 h-5 mr-2" />
-          Tambah Balita
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <Button variant="outline" className="w-full sm:w-auto" onClick={() => setModalTambahKeluarga(true)}>
+            <Plus className="w-5 h-5 mr-2" />
+            Tambah Keluarga
+          </Button>
+          <Button className="w-full sm:w-auto" onClick={() => setModalTambahAnak(true)}>
+            <Plus className="w-5 h-5 mr-2" />
+            Tambah Balita
+          </Button>
+        </div>
       </div>
+
+      {/* Form Tambah Keluarga Modal */}
+      <FormTambahKeluarga 
+        buka={modalTambahKeluarga} 
+        onTutup={() => setModalTambahKeluarga(false)}
+        onSukses={() => {
+          muatData();
+        }}
+      />
 
       {/* Form Tambah Anak Modal (Global Component) */}
       <FormTambahAnak 
