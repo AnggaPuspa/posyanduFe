@@ -32,9 +32,17 @@ function LoginForm() {
                     try {
                         // Ambil profil untuk dapat role user
                         const user = await authService.ambilProfil();
-                        const halamanTujuan = searchParams.get("kembali") || 
-                            KONFIGURASI_AUTH.HALAMAN_SESUAI_ROLE[user.role] || 
-                            KONFIGURASI_AUTH.HALAMAN_DEFAULT;
+                        const roleUser = user.role?.toLowerCase();
+                        
+                        let halamanTujuan = searchParams.get("kembali");
+                        if (!halamanTujuan) {
+                            if (roleUser === "orang_tua" || roleUser === "ortu" || roleUser === "masyarakat") {
+                                halamanTujuan = "/beranda";
+                            } else {
+                                halamanTujuan = KONFIGURASI_AUTH.HALAMAN_SESUAI_ROLE[roleUser] || KONFIGURASI_AUTH.HALAMAN_DEFAULT;
+                            }
+                        }
+                        
                         router.replace(halamanTujuan);
                         return;
                     } catch {
@@ -76,7 +84,18 @@ function LoginForm() {
             simpanToken(respon.token);
             tampilkanSukses(PESAN_AUTH.LOGIN_BERHASIL);
 
-            const halamanTujuan = searchParams.get("kembali") || KONFIGURASI_AUTH.HALAMAN_SESUAI_ROLE[respon.user.role] || KONFIGURASI_AUTH.HALAMAN_DEFAULT;
+            // Tentukan halaman tujuan berdasarkan role
+            const roleUser = respon.user.role?.toLowerCase();
+            let halamanTujuan = searchParams.get("kembali");
+            
+            // Jika tidak ada halaman kembali, tentukan berdasarkan role
+            if (!halamanTujuan) {
+                if (roleUser === "orang_tua" || roleUser === "ortu" || roleUser === "masyarakat") {
+                    halamanTujuan = "/beranda";
+                } else {
+                    halamanTujuan = KONFIGURASI_AUTH.HALAMAN_SESUAI_ROLE[roleUser] || KONFIGURASI_AUTH.HALAMAN_DEFAULT;
+                }
+            }
             
             // Gunakan window.location untuk redirect yang lebih reliable di production
             setTimeout(() => {

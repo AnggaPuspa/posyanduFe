@@ -47,4 +47,16 @@ export function Loading({ text = "Memuat...", fullScreen = false }: LoadingProps
   );
 }
 
+export function PageTransitionLoading() {
+  return (
+    <div className="fixed inset-0 z-[9999] bg-white flex items-center justify-center">
+      <img 
+        src="/logo.svg" 
+        alt="Loading" 
+        className="w-16 h-16 animate-pulse"
+      />
+    </div>
+  );
+}
+
 export default Spinner;

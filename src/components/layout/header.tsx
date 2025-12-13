@@ -2,18 +2,26 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
+import { TransitionLink } from "@/components/ui";
 
 const navLinks = [
-  { label: "Beranda", href: "#beranda" },
-  { label: "Fitur", href: "#fitur" },
-  { label: "Peta", href: "#peta" },
+  { label: "Beranda", href: "/" },
+  { label: "Tentang Kami", href: "/tentang-kami" },
+  { label: "Mitra", href: "/mitra-kerjasama" },
   { label: "Kontak", href: "#kontak" },
 ];
 
 export function FloatingNav() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,14 +57,18 @@ export function FloatingNav() {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
-              <Link
+              <TransitionLink
                 key={link.href}
                 href={link.href}
-                className="relative px-3 py-1.5 text-sm font-medium text-stone-500 hover:text-emerald-600 transition-colors group"
+                className={`relative px-3 py-1.5 text-sm font-medium transition-colors group ${
+                  isActive(link.href) ? "text-emerald-600" : "text-stone-500 hover:text-emerald-600"
+                }`}
               >
                 {link.label}
-                <span className="absolute bottom-0.5 left-3 right-3 h-px bg-emerald-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-              </Link>
+                <span className={`absolute bottom-0.5 left-3 right-3 h-px bg-emerald-500 transition-transform origin-left ${
+                  isActive(link.href) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                }`} />
+              </TransitionLink>
             ))}
           </div>
 
@@ -64,12 +76,12 @@ export function FloatingNav() {
           <div className="hidden md:block w-px h-5 bg-stone-200/60" />
 
           {/* CTA Button - Compact */}
-          <Link
+          <TransitionLink
             href="/dashboard"
             className="hidden md:flex items-center px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-semibold shadow-md shadow-emerald-500/20 hover:shadow-lg hover:shadow-emerald-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
           >
             Login
-          </Link>
+          </TransitionLink>
 
           {/* Mobile Toggle */}
           <button
@@ -89,23 +101,27 @@ export function FloatingNav() {
           <div className="p-3">
             <div className="flex flex-col gap-0.5">
               {navLinks.map((link) => (
-                <Link
+                <TransitionLink
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="px-4 py-2.5 rounded-xl text-sm text-stone-600 hover:bg-emerald-50 hover:text-emerald-600 font-medium transition-all"
+                  className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    isActive(link.href) 
+                      ? "bg-emerald-50 text-emerald-600" 
+                      : "text-stone-600 hover:bg-emerald-50 hover:text-emerald-600"
+                  }`}
                 >
                   {link.label}
-                </Link>
+                </TransitionLink>
               ))}
             </div>
-            <Link
+            <TransitionLink
               href="/dashboard"
               onClick={() => setIsOpen(false)}
               className="mt-2 flex items-center justify-center px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-semibold shadow-lg shadow-emerald-500/20"
             >
               Login Kader
-            </Link>
+            </TransitionLink>
           </div>
         </div>
       </nav>

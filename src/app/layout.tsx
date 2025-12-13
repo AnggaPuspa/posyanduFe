@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Nunito, Inter } from "next/font/google";
 import { ToastProvider } from "@/components/providers/toast-provider";
+import { ParallaxProvider } from "@/components/providers/parallax-provider";
+import { PageTransitionProvider } from "@/components/providers/page-transition-provider";
 import "./globals.css";
 
 const nunito = Nunito({
@@ -28,8 +30,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className={`${nunito.variable} ${inter.variable}`}>
-      <body className="min-h-screen bg-stone-50 font-sans antialiased">
-        <ToastProvider>{children}</ToastProvider>
+      <body className="min-h-screen bg-stone-50 antialiased" style={{ fontFamily: 'var(--font-nunito), var(--font-inter), system-ui, sans-serif' }}>
+        <PageTransitionProvider>
+          <ParallaxProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </ParallaxProvider>
+        </PageTransitionProvider>
       </body>
     </html>
   );

@@ -4,14 +4,14 @@ import Link from "next/link";
 import { Instagram, Globe } from "lucide-react";
 
 const lamanTerkait = [
-  { label: "Tentang Kami", href: "#" },
-  { label: "Mitra & Kerjasama", href: "#" },
-  { label: "Hubungi Kami", href: "#" },
+  { label: "Tentang Kami", href: "/tentang-kami" },
+  { label: "Mitra & Kerjasama", href: "/mitra-kerjasama" },
+  { label: "Hubungi Kami", href: "#kontak" },
 ];
 
 export function Footer() {
   return (
-    <footer id="kontak" className="bg-slate-900">
+    <footer id="kontak" className="bg-slate-900" style={{ transform: 'translateZ(0)' }}>
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-14">
         <div className="grid gap-10 md:gap-8 lg:grid-cols-12">
