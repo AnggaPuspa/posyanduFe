@@ -58,17 +58,13 @@ function LoginForm() {
                 const token = localStorage.getItem(KONFIGURASI_AUTH.NAMA_TOKEN);
                 if (token) {
                     try {
-                        // Ambil profil untuk dapat role user
                         const user = await authService.ambilProfil();
                         const halamanKembali = searchParams.get("kembali");
                         const halamanTujuan = getHalamanTujuanByRole(user.role, halamanKembali);
                         
-                        console.log("[Auth Check] Role:", user.role, "-> Redirect ke:", halamanTujuan);
                         router.replace(halamanTujuan);
                         return;
                     } catch {
-                        // Token invalid, lanjut ke form login
-                        console.log("[Auth Check] Token invalid, tampilkan form login");
                     }
                 }
             }
@@ -106,14 +102,9 @@ function LoginForm() {
             simpanToken(respon.token);
             tampilkanSukses(PESAN_AUTH.LOGIN_BERHASIL);
 
-            // Tentukan halaman tujuan berdasarkan role menggunakan helper function
             const halamanKembali = searchParams.get("kembali");
             const halamanTujuan = getHalamanTujuanByRole(respon.user.role, halamanKembali);
             
-            console.log("[Login] Role:", respon.user.role, "-> Redirect ke:", halamanTujuan);
-            
-            // Gunakan window.location untuk redirect yang lebih reliable
-            // Delay sedikit untuk memastikan token tersimpan
             setTimeout(() => {
                 window.location.href = halamanTujuan;
             }, 300);

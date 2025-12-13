@@ -22,11 +22,14 @@ export interface ErrorApi {
 
 export interface User {
     id: number;
-    nama: string;
+    name?: string;
+    nama?: string;
     email: string;
-    role: "admin" | "kader" | "orang_tua";
-    dibuat_pada: string;
-    diupdate_pada: string;
+    role: "admin" | "kader" | "orang_tua" | "posyandu" | "ortu";
+    dibuat_pada?: string;
+    diupdate_pada?: string;
+    created_at?: string;
+    updated_at?: string;
 }
 
 export interface DataLogin {

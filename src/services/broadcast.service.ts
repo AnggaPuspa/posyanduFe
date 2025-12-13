@@ -29,8 +29,6 @@ export const broadcastService = {
     ambilDaftar: async (): Promise<Broadcast[]> => {
         const response = await api.ambil<ResponList | Broadcast[] | unknown>("/posyandu/broadcasts");
 
-        console.log("[broadcastService.ambilDaftar] Raw response:", response);
-
         if (Array.isArray(response)) {
             return response;
         }

@@ -112,11 +112,7 @@ export default function PemeriksaanPage() {
     muatData();
   }, [muatData]);
 
-  // Callback setelah form pemeriksaan sukses
   const handleFormSukses = (result: RecordPemeriksaan) => {
-    console.log("Hasil pemeriksaan:", result);
-    
-    // Jika ada AI prediction yang belum verified, tampilkan modal konfirmasi
     if (result.ai_prediction && !result.ai_prediction.is_verified) {
       setRecordBaru(result);
       setModeKoreksi(false);
@@ -195,8 +191,6 @@ export default function PemeriksaanPage() {
     setSedangAnalisisUlang(record.id);
     try {
       const result = await recordsService.analisisUlang(record.id);
-      console.log("Hasil analisis ulang:", result);
-      
       const resultData = (result as any)?.data || result;
       
       if (resultData?.ai_prediction && !resultData.ai_prediction.is_verified) {

@@ -57,13 +57,9 @@ export default function DataAnakPage() {
         ? await childrenService.cari({ q: cari, page: halaman, per_page: 10 })
         : await childrenService.ambilDaftar({ page: halaman, per_page: 10 });
       
-      console.log("API Response:", result);
-      
-      // Format response: { data: { data: [...], current_page, total, per_page }, success: true }
       const response = result as any;
       
       if (response?.data?.data && Array.isArray(response.data.data)) {
-        // Format Laravel pagination: { data: { data: [], current_page, total, ... } }
         setData(response.data.data);
         setMeta({
           halaman_sekarang: response.data.current_page || 1,

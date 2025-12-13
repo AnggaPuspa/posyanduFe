@@ -5,7 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard, Users, ClipboardList, Brain, Megaphone, FileBarChart, Menu, X, LogOut } from "lucide-react";
-import { pakeKonteksAuth, ambilInisial, formatRole } from "@/contexts";
+import { pakeKonteksAuth, formatRole } from "@/contexts";
+import { getAvatarByRole } from "@/lib/avatar";
+import { useConfirm } from "@/components/providers/confirm-provider";
 
 const menuItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -19,21 +21,24 @@ const menuItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const { user, sedangMemuat, keluar } = pakeKonteksAuth();
+  const { confirmLogout } = useConfirm();
   const [isOpen, setIsOpen] = useState(false);
   const [sedangLogout, setSedangLogout] = useState(false);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     if (sedangLogout) return;
-    setSedangLogout(true);
-    await keluar();
+    confirmLogout(async () => {
+      setSedangLogout(true);
+      await keluar();
+    });
   };
 
-  const namaUser = user?.nama || "Memuat...";
+  const namaUser = user?.nama || user?.name || "Memuat...";
   const roleUser = user?.role ? formatRole(user.role) : "...";
-  const inisialUser = user?.nama ? ambilInisial(user.nama) : "??";
+  const avatarUrl = getAvatarByRole(namaUser, user?.role);
 
   return (
     <>
@@ -111,11 +116,11 @@ export function Sidebar() {
         <div className="absolute bottom-0 left-0 right-0 p-4">
           <div className="rounded-2xl bg-gradient-to-br from-stone-100 to-stone-50 p-4 border border-stone-200/60">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-teal-400 to-emerald-500 flex items-center justify-center text-white font-semibold text-sm shadow-lg shadow-emerald-200">
+              <div className="h-10 w-10 rounded-xl overflow-hidden bg-gradient-to-br from-teal-100 to-emerald-100 flex items-center justify-center shadow-lg shadow-emerald-200">
                 {sedangMemuat ? (
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin" />
                 ) : (
-                  inisialUser
+                  <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
                 )}
               </div>
               <div className="flex-1 min-w-0">

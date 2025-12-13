@@ -61,11 +61,16 @@ export default function LaporanPage() {
         totalPemeriksaan = recordResponse.data.total || records.length;
 
         records.forEach(r => {
-          const hasil = r.ai_prediction?.hasil_prediksi?.toLowerCase();
-          if (hasil?.includes("normal") || hasil?.includes("baik") || hasil?.includes("sehat")) normal++;
-          else if (hasil?.includes("kurang") || hasil?.includes("lebih")) perluPerhatian++;
-          else if (hasil?.includes("buruk") || hasil?.includes("stunting")) berisiko++;
-          else normal++;
+          const statusGizi = r.ai_prediction?.status_gizi || r.ai_prediction?.hasil_prediksi || "";
+          const hasil = statusGizi.toLowerCase();
+          
+          if (hasil.includes("buruk") || hasil.includes("stunting") || hasil.includes("sangat kurang")) {
+            berisiko++;
+          } else if (hasil.includes("kurang") || hasil.includes("lebih") || hasil.includes("obesitas") || hasil.includes("risiko")) {
+            perluPerhatian++;
+          } else if (hasil.includes("baik") || hasil.includes("normal") || hasil.includes("sehat") || hasil) {
+            normal++;
+          }
 
           const tglPeriksa = new Date(r.created_at || r.tanggal_periksa || "");
           if (tglPeriksa >= awalBulanIni) {

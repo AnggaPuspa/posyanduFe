@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Calendar, TrendingUp, AlertCircle, ChevronRight, Heart, Baby, RefreshCw, Megaphone, Bell, FileText, BookOpen } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, Avatar, StatusBadge, Button, Spinner, Badge } from "@/components/ui";
+import { Calendar, TrendingUp, AlertCircle, ChevronRight, Heart, Baby, RefreshCw } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, Avatar, StatusBadge, Button, Spinner } from "@/components/ui";
 import { ortuService } from "@/services";
 import { pakeToast } from "@/components/providers/toast-provider";
 import { pakeAuth } from "@/hooks/use-auth";
@@ -40,30 +40,7 @@ function statusFromPrediction(prediction?: { status_gizi?: string; hasil_prediks
   return "kuning";
 }
 
-function TipeBroadcastIcon({ tipe }: { tipe: string }) {
-  const config: Record<string, { color: string; icon: React.ElementType }> = {
-    pengumuman: { color: "from-amber-400 to-orange-500", icon: Bell },
-    artikel: { color: "from-sky-400 to-blue-500", icon: FileText },
-    edukasi: { color: "from-emerald-400 to-teal-500", icon: BookOpen },
-  };
-  const c = config[tipe] || config.pengumuman;
-  const Icon = c.icon;
-  return (
-    <div className={`h-9 w-9 md:h-10 md:w-10 rounded-lg md:rounded-xl bg-gradient-to-br ${c.color} flex items-center justify-center shadow-md shrink-0`}>
-      <Icon className="w-4 h-4 md:w-5 md:h-5 text-white" />
-    </div>
-  );
-}
 
-function TipeBadge({ tipe }: { tipe: string }) {
-  const config: Record<string, { variant: "warning" | "info" | "success"; label: string }> = {
-    pengumuman: { variant: "warning", label: "Pengumuman" },
-    artikel: { variant: "info", label: "Artikel" },
-    edukasi: { variant: "success", label: "Edukasi" },
-  };
-  const c = config[tipe] || config.pengumuman;
-  return <Badge variant={c.variant} className="text-[10px] md:text-xs">{c.label}</Badge>;
-}
 
 export default function BerandaPage() {
   const { user } = pakeAuth();
@@ -118,7 +95,6 @@ export default function BerandaPage() {
 
   const riwayatTerbaru = riwayat.slice(0, 3);
   const rekomendasiAI = riwayat[0]?.ai_prediction?.saran || null;
-  const broadcastTerbaru = broadcasts.slice(0, 3);
 
   if (sedangMemuat) {
     return (
@@ -145,45 +121,6 @@ export default function BerandaPage() {
           Refresh
         </Button>
       </div>
-
-      {broadcasts.length > 0 && (
-        <Card className="bg-gradient-to-br from-violet-50 to-purple-50 border-violet-200">
-          <CardHeader className="pb-2 md:pb-0">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center shadow-lg shadow-violet-200">
-                  <Megaphone className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <CardTitle className="text-base md:text-lg">Pengumuman Posyandu</CardTitle>
-                  <p className="text-[10px] md:text-xs text-violet-600">{broadcasts.length} pengumuman terbaru</p>
-                </div>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="pt-3 md:pt-4">
-            <div className="space-y-2 md:space-y-3">
-              {broadcastTerbaru.map((b) => (
-                <div key={b.id} className="p-3 md:p-4 rounded-xl md:rounded-2xl bg-white/80 border border-violet-100">
-                  <div className="flex items-start gap-3">
-                    <TipeBroadcastIcon tipe={b.tipe} />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h4 className="font-semibold text-sm md:text-base text-stone-800 truncate" style={{ fontFamily: 'var(--font-nunito)' }}>
-                          {b.judul}
-                        </h4>
-                        <TipeBadge tipe={b.tipe} />
-                      </div>
-                      <p className="text-xs md:text-sm text-stone-600 line-clamp-2">{b.isi}</p>
-                      <p className="text-[10px] md:text-xs text-stone-400 mt-1">{formatTanggal(b.created_at)}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       {anakSaya.length === 0 ? (
         <Card>

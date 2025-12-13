@@ -35,7 +35,7 @@ export const ortuService = {
         api.ambil<RiwayatPemeriksaan[]>("/ortu/history"),
 
     ambilBroadcasts: async (): Promise<BroadcastOrtu[]> => {
-        const response = await api.ambil<{ data?: BroadcastOrtu[] } | BroadcastOrtu[]>("/posyandu/broadcasts");
+        const response = await api.ambil<{ data?: BroadcastOrtu[] } | BroadcastOrtu[]>("/ortu/broadcasts");
         if (Array.isArray(response)) {
             return response;
         }

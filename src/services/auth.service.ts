@@ -20,20 +20,26 @@ export const authService = {
     ambilProfil: async (): Promise<User> => {
         const response = await api.ambil<ProfilResponse | User>("/auth/me");
 
+        let user: User;
+
         if (response && typeof response === 'object' && 'role' in response && response.role) {
-            return response as User;
+            user = response as User;
+        } else {
+            const profilResponse = response as ProfilResponse;
+            if (profilResponse.data && typeof profilResponse.data === 'object' && 'role' in profilResponse.data) {
+                user = profilResponse.data;
+            } else if (profilResponse.user && typeof profilResponse.user === 'object' && 'role' in profilResponse.user) {
+                user = profilResponse.user;
+            } else {
+                user = response as User;
+            }
         }
 
-        const profilResponse = response as ProfilResponse;
-        if (profilResponse.data && typeof profilResponse.data === 'object' && 'role' in profilResponse.data) {
-            return profilResponse.data;
+        if (user.name && !user.nama) {
+            user.nama = user.name;
         }
 
-        if (profilResponse.user && typeof profilResponse.user === 'object' && 'role' in profilResponse.user) {
-            return profilResponse.user;
-        }
-
-        return response as User;
+        return user;
     },
 
     refreshToken: (): Promise<{ token: string }> =>
