@@ -229,7 +229,113 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="h-16 bg-gradient-to-b from-stone-50 to-white" />
+      {/* Video Demo Section - Asymmetric Layout */}
+      <section className="relative py-20 md:py-32 bg-white overflow-hidden min-h-[700px] md:min-h-[800px] lg:min-h-[900px]">
+        {/* Background SVG */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: 'url(/bg-video.svg)',
+            backgroundSize: '100% 100%',
+            backgroundPosition: 'top left',
+            backgroundRepeat: 'no-repeat',
+          }}
+        />
+        
+        <div className="relative max-w-7xl mx-auto px-6">
+          
+          {/* Typography Header */}
+          <div className="mb-12 lg:mb-16">
+            <p className="text-sm tracking-[0.2em] text-stone-400 uppercase mb-2">Platform Kami</p>
+            <h2 style={{ fontFamily: 'var(--font-nunito)' }}>
+              <span className="block text-xl md:text-2xl font-medium text-stone-500">
+                Digitalisasi Posyandu
+              </span>
+              <span className="block text-4xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent -mt-1">
+                Jadi Mudah
+              </span>
+            </h2>
+          </div>
+
+          {/* Main Content Grid */}
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            
+            {/* Video - Takes 7 columns */}
+            <div className="lg:col-span-7">
+              <div className="relative aspect-video group rounded-lg overflow-hidden shadow-xl">
+                <video
+                  id="demo-video"
+                  className="w-full h-full object-cover"
+                  preload="metadata"
+                  controls
+                  playsInline
+                  onLoadedMetadata={(e) => {
+                    const video = e.currentTarget;
+                    video.currentTime = 1;
+                  }}
+                >
+                  <source src="/posyandu plus.mp4" type="video/mp4" />
+                </video>
+                
+                <button
+                  onClick={() => {
+                    const video = document.getElementById('demo-video') as HTMLVideoElement;
+                    if (video) {
+                      video.play();
+                      const overlay = document.getElementById('play-overlay');
+                      if (overlay) overlay.style.display = 'none';
+                    }
+                  }}
+                  id="play-overlay"
+                  className="absolute inset-0 flex items-center justify-center bg-stone-900/10 hover:bg-stone-900/20 transition-colors cursor-pointer"
+                  aria-label="Putar video demo"
+                >
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center hover:scale-110 active:scale-95 transition-transform">
+                    <svg className="w-6 h-6 md:w-8 md:h-8 text-stone-800 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </div>
+                </button>
+              </div>
+              
+              {/* CTA - Positioned under video */}
+              <div className="mt-6 md:mt-8">
+                <Link 
+                  href="/tentang-kami"
+                  className="inline-flex items-center gap-3 text-lg md:text-xl text-stone-800 hover:text-emerald-600 transition-colors group"
+                >
+                  <span className="font-medium">Pelajari lebih lanjut</span>
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Content - Takes 5 columns */}
+            <div className="lg:col-span-5 lg:pt-4">
+              <p className="text-stone-600 text-base md:text-lg leading-relaxed mb-8 max-w-md">
+                Lihat bagaimana platform digital membantu kader mengelola data kesehatan dengan lebih efisien. Pencatatan real-time, analytics otomatis, dan laporan terintegrasi—semua dalam satu tempat.
+              </p>
+
+              <div className="space-y-4 text-stone-500">
+                <p className="flex items-start gap-3">
+                  <span className="text-emerald-500 font-medium">—</span>
+                  <span>Pencatatan digital tanpa kertas</span>
+                </p>
+                <p className="flex items-start gap-3">
+                  <span className="text-emerald-500 font-medium">—</span>
+                  <span>Dashboard analytics real-time</span>
+                </p>
+                <p className="flex items-start gap-3">
+                  <span className="text-emerald-500 font-medium">—</span>
+                  <span>Laporan kesehatan terintegrasi</span>
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
 
       <section id="peta" className="relative py-12 bg-white">
         <div className="max-w-7xl mx-auto px-6">
@@ -259,7 +365,7 @@ export default function Home() {
                       <p className="text-lg md:text-xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent leading-tight" style={{ fontFamily: 'var(--font-nunito)' }}>
                         <AnimatedCounter target={45280} />
                       </p>
-                      <p className="text-[10px] text-slate-600 font-medium">Balita</p>
+                      <p className="text-[10px] text-stone-600 font-medium">Balita</p>
                     </div>
                   </div>
 
@@ -271,7 +377,7 @@ export default function Home() {
                       <p className="text-lg md:text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent leading-tight" style={{ fontFamily: 'var(--font-nunito)' }}>
                         <AnimatedCounter target={11220} />
                       </p>
-                      <p className="text-[10px] text-slate-600 font-medium">Posyandu</p>
+                      <p className="text-[10px] text-stone-600 font-medium">Posyandu</p>
                     </div>
                   </div>
 
@@ -283,7 +389,7 @@ export default function Home() {
                       <p className="text-lg md:text-xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent leading-tight" style={{ fontFamily: 'var(--font-nunito)' }}>
                         <AnimatedCounter target={28450} />
                       </p>
-                      <p className="text-[10px] text-slate-600 font-medium">Kader</p>
+                      <p className="text-[10px] text-stone-600 font-medium">Kader</p>
                     </div>
                   </div>
               </div>
@@ -432,7 +538,7 @@ export default function Home() {
           <p className="text-sm font-semibold text-teal-700 uppercase tracking-[3px] mb-3">
             Testimonial
           </p>
-          <h3 className="text-3xl md:text-4xl font-bold text-slate-800" style={{ fontFamily: 'var(--font-nunito)' }}>
+          <h3 className="text-3xl md:text-4xl font-bold text-stone-800" style={{ fontFamily: 'var(--font-nunito)' }}>
             Kata Mereka tentang Posyandu+
           </h3>
         </div>
@@ -446,10 +552,10 @@ export default function Home() {
                   alt="Siti Rahayu"
                   className="w-10 h-10 rounded-full bg-pink-100"
                 />
-                <span className="text-sm font-semibold text-slate-700">Siti Rahayu</span>
+                <span className="text-sm font-semibold text-stone-700">Siti Rahayu</span>
               </div>
               <p className="text-emerald-600 font-bold text-sm mb-2">&quot;Sangat membantu!&quot;</p>
-              <p className="text-slate-600 text-xs leading-relaxed">
+              <p className="text-stone-600 text-xs leading-relaxed">
                 Sebagai kader, saya jadi lebih mudah mencatat data balita. Tidak perlu buku tebal lagi, semua ada di HP.
               </p>
             </div>
@@ -461,10 +567,10 @@ export default function Home() {
                   alt="Dewi Kartika"
                   className="w-10 h-10 rounded-full bg-emerald-100"
                 />
-                <span className="text-sm font-semibold text-slate-700">Dewi Kartika</span>
+                <span className="text-sm font-semibold text-stone-700">Dewi Kartika</span>
               </div>
               <p className="text-emerald-600 font-bold text-sm mb-2">&quot;Deteksi dini stunting&quot;</p>
-              <p className="text-slate-600 text-xs leading-relaxed">
+              <p className="text-stone-600 text-xs leading-relaxed">
                 Fitur AI-nya keren banget! Bisa langsung tahu kalau ada balita yang perlu perhatian khusus. Intervensi jadi lebih cepat.
               </p>
             </div>
@@ -476,10 +582,10 @@ export default function Home() {
                   alt="Rina Wulandari"
                   className="w-10 h-10 rounded-full bg-amber-100"
                 />
-                <span className="text-sm font-semibold text-slate-700">Rina Wulandari</span>
+                <span className="text-sm font-semibold text-stone-700">Rina Wulandari</span>
               </div>
               <p className="text-emerald-600 font-bold text-sm mb-2">&quot;Laporan jadi mudah&quot;</p>
-              <p className="text-slate-600 text-xs leading-relaxed">
+              <p className="text-stone-600 text-xs leading-relaxed">
                 Dulu bikin laporan bulanan bisa seharian. Sekarang tinggal klik, langsung jadi. Hemat waktu banget!
               </p>
             </div>
@@ -491,10 +597,10 @@ export default function Home() {
                   alt="Ani Suryani"
                   className="w-10 h-10 rounded-full bg-violet-100"
                 />
-                <span className="text-sm font-semibold text-slate-700">Ani Suryani</span>
+                <span className="text-sm font-semibold text-stone-700">Ani Suryani</span>
               </div>
               <p className="text-emerald-600 font-bold text-sm mb-2">&quot;Orang tua senang&quot;</p>
-              <p className="text-slate-600 text-xs leading-relaxed">
+              <p className="text-stone-600 text-xs leading-relaxed">
                 Orang tua balita bisa pantau perkembangan anaknya dari HP. Mereka jadi lebih aware soal gizi dan kesehatan anak.
               </p>
             </div>
@@ -518,10 +624,10 @@ export default function Home() {
                       alt="Siti Rahayu"
                       className="w-10 h-10 rounded-full bg-pink-100"
                     />
-                    <span className="text-sm font-semibold text-slate-700">Siti Rahayu</span>
+                    <span className="text-sm font-semibold text-stone-700">Siti Rahayu</span>
                   </div>
                   <p className="text-emerald-600 font-bold text-sm mb-2">&quot;Sangat membantu!&quot;</p>
-                  <p className="text-slate-600 text-xs leading-relaxed">
+                  <p className="text-stone-600 text-xs leading-relaxed">
                     Sebagai kader, saya jadi lebih mudah mencatat data balita. Tidak perlu buku tebal lagi, semua ada di HP.
                   </p>
                 </div>
@@ -535,10 +641,10 @@ export default function Home() {
                       alt="Dewi Kartika"
                       className="w-10 h-10 rounded-full bg-emerald-100"
                     />
-                    <span className="text-sm font-semibold text-slate-700">Dewi Kartika</span>
+                    <span className="text-sm font-semibold text-stone-700">Dewi Kartika</span>
                   </div>
                   <p className="text-emerald-600 font-bold text-sm mb-2">&quot;Deteksi dini stunting&quot;</p>
-                  <p className="text-slate-600 text-xs leading-relaxed">
+                  <p className="text-stone-600 text-xs leading-relaxed">
                     Fitur AI-nya keren banget! Bisa langsung tahu kalau ada balita yang perlu perhatian khusus.
                   </p>
                 </div>
@@ -552,10 +658,10 @@ export default function Home() {
                       alt="Rina Wulandari"
                       className="w-10 h-10 rounded-full bg-amber-100"
                     />
-                    <span className="text-sm font-semibold text-slate-700">Rina Wulandari</span>
+                    <span className="text-sm font-semibold text-stone-700">Rina Wulandari</span>
                   </div>
                   <p className="text-emerald-600 font-bold text-sm mb-2">&quot;Laporan jadi mudah&quot;</p>
-                  <p className="text-slate-600 text-xs leading-relaxed">
+                  <p className="text-stone-600 text-xs leading-relaxed">
                     Dulu bikin laporan bulanan bisa seharian. Sekarang tinggal klik, langsung jadi. Hemat waktu banget!
                   </p>
                 </div>
@@ -569,10 +675,10 @@ export default function Home() {
                       alt="Ani Suryani"
                       className="w-10 h-10 rounded-full bg-violet-100"
                     />
-                    <span className="text-sm font-semibold text-slate-700">Ani Suryani</span>
+                    <span className="text-sm font-semibold text-stone-700">Ani Suryani</span>
                   </div>
                   <p className="text-emerald-600 font-bold text-sm mb-2">&quot;Orang tua senang&quot;</p>
-                  <p className="text-slate-600 text-xs leading-relaxed">
+                  <p className="text-stone-600 text-xs leading-relaxed">
                     Orang tua balita bisa pantau perkembangan anaknya dari HP. Mereka jadi lebih aware soal gizi dan kesehatan anak.
                   </p>
                 </div>

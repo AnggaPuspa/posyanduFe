@@ -82,7 +82,7 @@ export default function TentangKami() {
                 className="text-base md:text-lg leading-relaxed text-slate-600 mb-6"
                 style={{ fontFamily: 'var(--font-nunito)' }}
               >
-                Hadir sejak 2024, kami berkomitmen menciptakan sistem pemantauan kesehatan balita yang berkelanjutan melalui ekosistem digital. Sebagai platform independen, Posyandu+ mempunyai tujuan #CegahStunting dengan membuat pencatatan dan analisis data balita jadi lebih efisien dan akurat.
+                Hadir sejak 2020, kami berkomitmen menciptakan sistem pemantauan kesehatan balita yang berkelanjutan melalui ekosistem digital. Sebagai platform independen, Posyandu+ mempunyai tujuan #CegahStunting dengan membuat pencatatan dan analisis data balita jadi lebih efisien dan akurat.
               </p>
               <a 
                 href="/mitra-kerjasama" 
@@ -297,10 +297,6 @@ export default function TentangKami() {
                         Dashboard realtime untuk pemerintah.<br className="hidden md:block" />
                         <span className="text-slate-400">Kebijakan berdasarkan fakta, bukan asumsi.</span>
                       </p>
-                      <div className="flex items-center gap-2">
-                        <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="text-emerald-600 text-sm font-semibold tracking-wide">LIVE ANALYTICS</span>
-                      </div>
                     </div>
                   </div>
                 </div>

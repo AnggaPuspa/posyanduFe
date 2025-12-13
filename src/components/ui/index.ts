@@ -8,3 +8,5 @@ export { TransitionLink } from "./transition-link";
 export { Badge, StatusBadge } from "./badge";
 export { Avatar } from "./avatar";
 export { Modal } from "./modal";
+export { TermsModal } from "./terms-modal";
+

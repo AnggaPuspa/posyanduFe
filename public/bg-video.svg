@@ -1,0 +1,72 @@
+<svg width="100%" height="100%" viewBox="0 0 1920 900" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1920" height="900" fill="#fafafa"/>
+
+<!-- Subtle base gradient -->
+<defs>
+  <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#ffffff"/>
+    <stop offset="100%" stop-color="#f0fdf4"/>
+  </linearGradient>
+</defs>
+<rect width="1920" height="900" fill="url(#bgGrad)"/>
+
+<!-- TOP RIGHT CORNER - Botanical Branch -->
+<g opacity="0.35" transform="translate(1650, 30)">
+  <!-- Main branch -->
+  <path d="M0 0 Q50 80, 30 180 Q20 250, 60 320" stroke="#059669" stroke-width="3" fill="none" stroke-linecap="round"/>
+  
+  <!-- Leaves on branch -->
+  <path d="M30 60 Q60 40, 80 70 Q60 90, 30 60" fill="#10b981"/>
+  <path d="M25 100 Q-10 80, -30 110 Q-10 140, 25 100" fill="#10b981" opacity="0.9"/>
+  <path d="M35 150 Q70 130, 95 160 Q70 190, 35 150" fill="#10b981" opacity="0.85"/>
+  <path d="M30 200 Q-5 180, -25 210 Q-5 240, 30 200" fill="#10b981" opacity="0.9"/>
+  <path d="M45 260 Q80 240, 100 270 Q80 300, 45 260" fill="#10b981" opacity="0.8"/>
+</g>
+
+<!-- TOP LEFT - Scattered leaves -->
+<g opacity="0.3" transform="translate(80, 60)">
+  <path d="M0 0 Q25 -20, 50 0 Q25 20, 0 0" fill="#059669"/>
+  <path d="M60 25 Q80 5, 105 25 Q80 45, 60 25" fill="#10b981"/>
+</g>
+
+<!-- BOTTOM LEFT CORNER - Larger botanical -->
+<g opacity="0.35" transform="translate(20, 580)">
+  <!-- Curved stem -->
+  <path d="M0 320 Q100 250, 150 150 Q180 80, 250 20" stroke="#059669" stroke-width="4" fill="none" stroke-linecap="round"/>
+  
+  <!-- Leaves - bigger and more visible -->
+  <path d="M50 280 Q100 240, 130 290 Q90 340, 50 280" fill="#10b981"/>
+  <path d="M90 220 Q140 180, 170 230 Q130 280, 90 220" fill="#10b981" opacity="0.9"/>
+  <path d="M130 160 Q80 120, 50 170 Q90 220, 130 160" fill="#10b981" opacity="0.85"/>
+  <path d="M170 100 Q220 60, 250 110 Q210 160, 170 100" fill="#10b981" opacity="0.85"/>
+  <path d="M200 60 Q160 20, 130 70 Q170 120, 200 60" fill="#10b981" opacity="0.8"/>
+  <path d="M230 30 Q280 -10, 310 40 Q270 90, 230 30" fill="#10b981" opacity="0.75"/>
+</g>
+
+<!-- CENTER RIGHT - Floating leaves -->
+<g opacity="0.25" transform="translate(1780, 420)">
+  <path d="M0 0 Q30 -25, 60 0 Q30 25, 0 0" fill="#10b981"/>
+  <path d="M-30 50 Q5 25, 40 50 Q5 75, -30 50" fill="#10b981" opacity="0.85"/>
+  <path d="M10 95 Q40 70, 70 95 Q40 120, 10 95" fill="#10b981" opacity="0.7"/>
+</g>
+
+<!-- BOTTOM RIGHT - Accent leaves -->
+<g opacity="0.28" transform="translate(1650, 750)">
+  <path d="M0 0 Q35 -30, 70 0 Q35 30, 0 0" fill="#059669"/>
+  <path d="M80 25 Q110 0, 140 25 Q110 50, 80 25" fill="#10b981" opacity="0.85"/>
+  <path d="M50 60 Q80 35, 110 60 Q80 85, 50 60" fill="#10b981" opacity="0.7"/>
+</g>
+
+<!-- MID LEFT - More visible accent -->
+<g opacity="0.2" transform="translate(40, 350)">
+  <path d="M0 0 Q30 -20, 55 0 Q30 20, 0 0" fill="#10b981"/>
+  <path d="M20 40 Q45 20, 70 40 Q45 60, 20 40" fill="#10b981" opacity="0.8"/>
+</g>
+
+<!-- Top center accent -->
+<g opacity="0.15" transform="translate(900, 20)">
+  <path d="M0 0 Q20 -15, 40 0 Q20 15, 0 0" fill="#10b981"/>
+  <path d="M50 10 Q70 -5, 90 10 Q70 25, 50 10" fill="#10b981" opacity="0.8"/>
+</g>
+
+</svg>
