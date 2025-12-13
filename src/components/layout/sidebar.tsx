@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Users, ClipboardList, Brain, Bell, FileBarChart, Menu, X, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, ClipboardList, Brain, Megaphone, FileBarChart, Menu, X, LogOut } from "lucide-react";
 import { pakeKonteksAuth, ambilInisial, formatRole } from "@/contexts";
 
 const menuItems = [
@@ -12,7 +12,7 @@ const menuItems = [
   { label: "Data Balita", href: "/dashboard/anak", icon: Users },
   { label: "Pemeriksaan", href: "/dashboard/pemeriksaan", icon: ClipboardList },
   { label: "Analisis AI", href: "/dashboard/analisis", icon: Brain },
-  { label: "Notifikasi", href: "/dashboard/notifikasi", icon: Bell },
+  { label: "Broadcast", href: "/dashboard/notifikasi", icon: Megaphone },
   { label: "Laporan", href: "/dashboard/laporan", icon: FileBarChart },
 ];
 

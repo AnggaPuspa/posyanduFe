@@ -16,25 +16,35 @@ function formatTanggal(tanggal: string) {
   });
 }
 
-function statusFromPrediction(hasil?: string): string {
-  if (!hasil) return "normal";
-  const lower = hasil.toLowerCase();
+function getStatusFromPrediction(prediction?: { status_gizi?: string; hasil_prediksi?: string } | null): string {
+  if (!prediction) return "";
+  return prediction.status_gizi || prediction.hasil_prediksi || "";
+}
+
+function statusFromPrediction(prediction?: { status_gizi?: string; hasil_prediksi?: string } | null): string {
+  const status = getStatusFromPrediction(prediction);
+  if (!status) return "normal";
+  
+  const lower = status.toLowerCase();
   if (lower === "error" || lower === "gagal") return "kuning";
-  if (lower.includes("buruk") || lower.includes("kurang") || lower.includes("stunting")) return "merah";
+  if (lower.includes("buruk") || lower.includes("stunting") || lower.includes("sangat kurang")) return "merah";
+  if (lower.includes("kurang")) return "kuning";
   if (lower.includes("lebih") || lower.includes("obesitas")) return "kuning";
-  if (lower.includes("normal") || lower.includes("baik") || lower.includes("sehat")) return "normal";
+  if (lower.includes("baik") || lower.includes("normal") || lower.includes("sehat")) return "normal";
   return "kuning";
 }
 
-function formatHasilPrediksi(hasil?: string): string {
-  if (!hasil) return "Belum dianalisis";
-  const lower = hasil.toLowerCase();
+function formatHasilPrediksi(prediction?: { status_gizi?: string; hasil_prediksi?: string } | null): string {
+  const status = getStatusFromPrediction(prediction);
+  if (!status) return "Belum dianalisis";
+  
+  const lower = status.toLowerCase();
   if (lower === "error" || lower === "gagal") return "⚠️ Terjadi kesalahan saat analisis";
-  if (lower.includes("normal") || lower.includes("baik") || lower.includes("sehat")) return "✅ Gizi Baik";
-  if (lower.includes("kurang")) return "⚠️ Gizi Kurang";
-  if (lower.includes("buruk") || lower.includes("stunting")) return "🚨 Gizi Buruk / Stunting";
+  if (lower.includes("baik") || lower.includes("normal") || lower.includes("sehat")) return "✅ Gizi Baik";
+  if (lower.includes("kurang") && !lower.includes("sangat")) return "⚠️ Gizi Kurang";
+  if (lower.includes("buruk") || lower.includes("stunting") || lower.includes("sangat kurang")) return "🚨 Gizi Buruk / Stunting";
   if (lower.includes("lebih") || lower.includes("obesitas")) return "⚠️ Gizi Lebih";
-  return hasil;
+  return status;
 }
 
 const STATUS_OPTIONS = [
@@ -281,7 +291,7 @@ export default function PemeriksaanPage() {
                           <p className="text-xs text-stone-500">{formatTanggal(p.created_at || p.tanggal_periksa || "")}</p>
                         </div>
                       </div>
-                      <StatusBadge status={statusFromPrediction(p.ai_prediction?.hasil_prediksi)} />
+                      <StatusBadge status={statusFromPrediction(p.ai_prediction)} />
                     </div>
                     <div className="grid grid-cols-2 gap-2 text-sm mb-3">
                       <div className="bg-white p-2 rounded-lg text-center">
@@ -347,7 +357,7 @@ export default function PemeriksaanPage() {
                         <td className="py-4 px-4 text-sm text-stone-600">{p.lingkar_kepala || "-"} cm</td>
                         <td className="py-4 px-4 text-sm text-stone-600">{p.lingkar_lengan || "-"} cm</td>
                         <td className="py-4 px-4">
-                          <StatusBadge status={statusFromPrediction(p.ai_prediction?.hasil_prediksi)} />
+                          <StatusBadge status={statusFromPrediction(p.ai_prediction)} />
                         </td>
                         <td className="py-4 px-4">
                           <div className="flex items-center gap-2">
@@ -462,10 +472,10 @@ export default function PemeriksaanPage() {
                   <div className="p-4 bg-gradient-to-r from-violet-100 to-purple-100 rounded-xl">
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-sm text-stone-600">Status Gizi:</span>
-                      <StatusBadge status={statusFromPrediction(recordTerpilih.ai_prediction.hasil_prediksi)} />
+                      <StatusBadge status={statusFromPrediction(recordTerpilih.ai_prediction)} />
                     </div>
                     <p className="text-lg font-semibold text-violet-800">
-                      {formatHasilPrediksi(recordTerpilih.ai_prediction.hasil_prediksi)}
+                      {formatHasilPrediksi(recordTerpilih.ai_prediction)}
                     </p>
                   </div>
                 )}
@@ -565,9 +575,9 @@ export default function PemeriksaanPage() {
               </div>
               <div className="flex items-center justify-between">
                 <p className="text-xl font-bold text-violet-800">
-                  {formatHasilPrediksi(recordBaru.ai_prediction?.hasil_prediksi)}
+                  {formatHasilPrediksi(recordBaru.ai_prediction)}
                 </p>
-                <StatusBadge status={statusFromPrediction(recordBaru.ai_prediction?.hasil_prediksi)} />
+                <StatusBadge status={statusFromPrediction(recordBaru.ai_prediction)} />
               </div>
               {recordBaru.ai_prediction?.saran && (
                 <p className="text-sm text-violet-700 mt-3 p-3 bg-white/50 rounded-lg">

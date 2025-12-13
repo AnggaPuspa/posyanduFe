@@ -57,12 +57,15 @@ function ZScoreBar({ value, label }: { value: number; label: string }) {
   );
 }
 
-function statusFromPrediction(hasil?: string): string {
-  if (!hasil) return "normal";
-  const lower = hasil.toLowerCase();
-  if (lower.includes("buruk") || lower.includes("kurang") || lower.includes("stunting")) return "merah";
+function statusFromPrediction(prediction?: { status_gizi?: string; hasil_prediksi?: string } | null, fallbackStatus?: string): string {
+  const status = prediction?.status_gizi || prediction?.hasil_prediksi || fallbackStatus || "";
+  if (!status) return "normal";
+  
+  const lower = status.toLowerCase();
+  if (lower.includes("buruk") || lower.includes("stunting") || lower.includes("sangat kurang")) return "merah";
+  if (lower.includes("kurang")) return "kuning";
   if (lower.includes("lebih") || lower.includes("obesitas")) return "kuning";
-  if (lower.includes("normal") || lower.includes("baik") || lower.includes("sehat")) return "normal";
+  if (lower.includes("baik") || lower.includes("normal") || lower.includes("sehat")) return "normal";
   return "kuning";
 }
 
@@ -138,7 +141,7 @@ export default function HasilPage() {
 
   const aiPrediction = hasilTerpilih.ai_prediction;
   const namaAnak = hasilTerpilih.child?.nama_anak || anakSaya[0]?.nama_anak || "Anak";
-  const levelRisiko = statusFromPrediction(aiPrediction?.hasil_prediksi || hasilTerpilih.status);
+  const levelRisiko = statusFromPrediction(aiPrediction, hasilTerpilih.status);
 
   return (
     <div className="space-y-4 md:space-y-6">
@@ -207,7 +210,7 @@ export default function HasilPage() {
                   levelRisiko === "kuning" ? "text-amber-800" :
                   "text-emerald-800"
                 }`} style={{ fontFamily: 'var(--font-nunito)' }}>
-                  {aiPrediction?.hasil_prediksi || hasilTerpilih.status || "Normal"}
+                  {aiPrediction?.status_gizi || aiPrediction?.hasil_prediksi || hasilTerpilih.status || "Normal"}
                 </p>
                 <p className={`text-xs md:text-sm ${
                   levelRisiko === "merah" ? "text-rose-700" :

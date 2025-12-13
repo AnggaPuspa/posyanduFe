@@ -27,12 +27,15 @@ function formatTanggal(tanggal: string) {
   });
 }
 
-function statusFromPrediction(hasil?: string): string {
-  if (!hasil) return "normal";
-  const lower = hasil.toLowerCase();
-  if (lower.includes("buruk") || lower.includes("kurang") || lower.includes("stunting")) return "merah";
+function statusFromPrediction(prediction?: { status_gizi?: string; hasil_prediksi?: string } | null, fallbackStatus?: string): string {
+  const status = prediction?.status_gizi || prediction?.hasil_prediksi || fallbackStatus || "";
+  if (!status) return "normal";
+  
+  const lower = status.toLowerCase();
+  if (lower.includes("buruk") || lower.includes("stunting") || lower.includes("sangat kurang")) return "merah";
+  if (lower.includes("kurang")) return "kuning";
   if (lower.includes("lebih") || lower.includes("obesitas")) return "kuning";
-  if (lower.includes("normal") || lower.includes("baik") || lower.includes("sehat")) return "normal";
+  if (lower.includes("baik") || lower.includes("normal") || lower.includes("sehat")) return "normal";
   return "kuning";
 }
 
@@ -151,7 +154,7 @@ export default function RiwayatPage() {
                           <p className="text-[10px] text-stone-400">{r.child?.nama_anak}</p>
                         </div>
                       </div>
-                      <StatusBadge status={statusFromPrediction(r.ai_prediction?.hasil_prediksi || r.status)} />
+                      <StatusBadge status={statusFromPrediction(r.ai_prediction, r.status)} />
                     </div>
                     <div className="grid grid-cols-4 gap-2 text-center">
                       <div className="p-1.5 rounded-lg bg-white">
@@ -207,7 +210,7 @@ export default function RiwayatPage() {
                         <td className="py-4 px-4 text-sm text-stone-600">{r.lingkar_kepala || "-"}</td>
                         <td className="py-4 px-4 text-sm text-stone-600">{r.lingkar_lengan || "-"}</td>
                         <td className="py-4 px-4">
-                          <StatusBadge status={statusFromPrediction(r.ai_prediction?.hasil_prediksi || r.status)} />
+                          <StatusBadge status={statusFromPrediction(r.ai_prediction, r.status)} />
                         </td>
                       </tr>
                     ))}

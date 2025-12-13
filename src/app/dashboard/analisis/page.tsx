@@ -6,16 +6,27 @@ import { Card, CardContent, CardHeader, CardTitle, Avatar, Badge, Spinner } from
 import { recordsService } from "@/services";
 import type { RecordPemeriksaan } from "@/types";
 
-function RisikoBadge({ level }: { level: string }) {
+function getStatusFromPrediction(prediction?: { status_gizi?: string; hasil_prediksi?: string } | null): string {
+  if (!prediction) return "";
+  return prediction.status_gizi || prediction.hasil_prediksi || "";
+}
+
+function getRisikoLevel(status: string): "rendah" | "sedang" | "tinggi" {
+  if (!status) return "rendah";
+  const lower = status.toLowerCase();
+  if (lower.includes("buruk") || lower.includes("stunting") || lower.includes("sangat kurang")) return "tinggi";
+  if (lower.includes("kurang") || lower.includes("lebih") || lower.includes("obesitas") || lower.includes("risiko")) return "sedang";
+  return "rendah";
+}
+
+function RisikoBadge({ status }: { status: string }) {
+  const level = getRisikoLevel(status);
   const config: Record<string, { variant: "success" | "warning" | "danger"; icon: React.ElementType; label: string }> = {
-    hijau: { variant: "success", icon: CheckCircle2, label: "Risiko Rendah" },
-    normal: { variant: "success", icon: CheckCircle2, label: "Risiko Rendah" },
-    kuning: { variant: "warning", icon: AlertTriangle, label: "Risiko Sedang" },
-    kurang: { variant: "warning", icon: AlertTriangle, label: "Risiko Sedang" },
-    merah: { variant: "danger", icon: AlertTriangle, label: "Risiko Tinggi" },
-    buruk: { variant: "danger", icon: AlertTriangle, label: "Risiko Tinggi" },
+    rendah: { variant: "success", icon: CheckCircle2, label: "Risiko Rendah" },
+    sedang: { variant: "warning", icon: AlertTriangle, label: "Risiko Sedang" },
+    tinggi: { variant: "danger", icon: AlertTriangle, label: "Risiko Tinggi" },
   };
-  const c = config[level] || config.hijau;
+  const c = config[level];
   const Icon = c.icon;
   return (
     <Badge variant={c.variant} className="inline-flex items-center gap-1.5 px-3 py-1.5">
@@ -131,7 +142,7 @@ export default function AnalisisPage() {
                       <p className="text-sm text-stone-500">Pemeriksaan: {formatTanggal(record.created_at || record.tanggal_periksa || "")}</p>
                     </div>
                   </div>
-                  <RisikoBadge level={record.ai_prediction?.hasil_prediksi || "normal"} />
+                  <RisikoBadge status={getStatusFromPrediction(record.ai_prediction)} />
                 </div>
               </CardHeader>
               <CardContent>
@@ -146,17 +157,21 @@ export default function AnalisisPage() {
                   </div>
                   
                   <div className="space-y-4">
-                    <div className={`p-4 rounded-2xl ${
-                      record.ai_prediction?.hasil_prediksi === 'buruk' ? 'bg-rose-50' : 
-                      record.ai_prediction?.hasil_prediksi === 'kurang' ? 'bg-amber-50' : 'bg-emerald-50'
-                    }`}>
-                      <p className="font-bold text-stone-800 mb-1 capitalize" style={{ fontFamily: 'var(--font-nunito)' }}>
-                        {record.ai_prediction?.hasil_prediksi || "Normal"}
-                      </p>
-                      <p className="text-sm text-stone-600">
-                        Berat: {record.berat_badan} kg • Tinggi: {record.tinggi_badan} cm
-                      </p>
-                    </div>
+                    {(() => {
+                      const status = getStatusFromPrediction(record.ai_prediction);
+                      const level = getRisikoLevel(status);
+                      const bg = level === 'tinggi' ? 'bg-rose-50' : level === 'sedang' ? 'bg-amber-50' : 'bg-emerald-50';
+                      return (
+                        <div className={`p-4 rounded-2xl ${bg}`}>
+                          <p className="font-bold text-stone-800 mb-1" style={{ fontFamily: 'var(--font-nunito)' }}>
+                            {status || "Normal"}
+                          </p>
+                          <p className="text-sm text-stone-600">
+                            Berat: {record.berat_badan} kg • Tinggi: {record.tinggi_badan} cm
+                          </p>
+                        </div>
+                      );
+                    })()}
                     
                     {record.ai_prediction?.saran && (
                       <div className="p-4 rounded-2xl bg-violet-50">
@@ -173,40 +188,50 @@ export default function AnalisisPage() {
                 <div className="mt-6 pt-5 border-t border-stone-100">
                   <h4 className="text-sm font-semibold text-stone-500 uppercase tracking-wide mb-3">Rekomendasi</h4>
                   <div className="flex flex-wrap gap-2">
-                    {record.ai_prediction?.hasil_prediksi === "normal" ? (
-                      <>
-                        <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                          Pertahankan pola makan seimbang
-                        </span>
-                        <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                          Lanjutkan pemeriksaan rutin
-                        </span>
-                      </>
-                    ) : record.ai_prediction?.hasil_prediksi === "kurang" ? (
-                      <>
-                        <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
-                          <CheckCircle2 className="w-4 h-4 text-amber-500" />
-                          Tingkatkan asupan protein
-                        </span>
-                        <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
-                          <CheckCircle2 className="w-4 h-4 text-amber-500" />
-                          Pemeriksaan lebih sering
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
-                          <CheckCircle2 className="w-4 h-4 text-rose-500" />
-                          Konsultasi ke Puskesmas
-                        </span>
-                        <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
-                          <CheckCircle2 className="w-4 h-4 text-rose-500" />
-                          Pantau setiap 2 minggu
-                        </span>
-                      </>
-                    )}
+                    {(() => {
+                      const status = getStatusFromPrediction(record.ai_prediction);
+                      const level = getRisikoLevel(status);
+                      if (level === "rendah") {
+                        return (
+                          <>
+                            <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
+                              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                              Pertahankan pola makan seimbang
+                            </span>
+                            <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
+                              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                              Lanjutkan pemeriksaan rutin
+                            </span>
+                          </>
+                        );
+                      } else if (level === "sedang") {
+                        return (
+                          <>
+                            <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
+                              <CheckCircle2 className="w-4 h-4 text-amber-500" />
+                              Tingkatkan asupan protein
+                            </span>
+                            <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
+                              <CheckCircle2 className="w-4 h-4 text-amber-500" />
+                              Pemeriksaan lebih sering
+                            </span>
+                          </>
+                        );
+                      } else {
+                        return (
+                          <>
+                            <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
+                              <CheckCircle2 className="w-4 h-4 text-rose-500" />
+                              Konsultasi ke Puskesmas
+                            </span>
+                            <span className="inline-flex items-center gap-2 px-4 py-2 bg-stone-50 rounded-xl text-sm text-stone-600">
+                              <CheckCircle2 className="w-4 h-4 text-rose-500" />
+                              Pantau setiap 2 minggu
+                            </span>
+                          </>
+                        );
+                      }
+                    })()}
                   </div>
                 </div>
               </CardContent>

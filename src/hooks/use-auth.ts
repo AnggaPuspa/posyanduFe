@@ -42,7 +42,17 @@ export function pakeAuth(konfig: KonfigAuth = {}) {
 
                 setState({ user: respon.user, sedangMemuat: false, error: null });
 
-                const halamanTujuan = KONFIGURASI_AUTH.HALAMAN_SESUAI_ROLE[respon.user.role] || redirectSetelahLogin;
+                // Normalize role dan tentukan halaman tujuan
+                const roleNormalized = respon.user.role?.toLowerCase()?.trim() || "";
+                const roleOrangTua = ["orang_tua", "ortu", "masyarakat"];
+
+                let halamanTujuan: string;
+                if (roleOrangTua.includes(roleNormalized)) {
+                    halamanTujuan = "/beranda";
+                } else {
+                    halamanTujuan = KONFIGURASI_AUTH.HALAMAN_SESUAI_ROLE[roleNormalized] || redirectSetelahLogin;
+                }
+
                 router.push(halamanTujuan);
 
                 return { sukses: true };

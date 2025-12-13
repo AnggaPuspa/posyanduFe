@@ -12,6 +12,34 @@ import { pakeToast } from "@/components/providers/toast-provider";
 import { KONFIGURASI_AUTH, PESAN_AUTH } from "@/config";
 import type { DataLogin, ErrorApi } from "@/types";
 
+function getHalamanTujuanByRole(role: string | undefined, halamanKembali: string | null): string {
+    const roleNormalized = role?.toLowerCase()?.trim() || "";
+    
+    const roleOrangTua = ["orang_tua", "ortu", "masyarakat"];
+    const roleAdmin = ["admin", "kader", "posyandu"];
+    
+    if (roleOrangTua.includes(roleNormalized)) {
+        if (halamanKembali && 
+            halamanKembali !== "/login" && 
+            !halamanKembali.startsWith("/dashboard")) {
+            return halamanKembali;
+        }
+        return "/beranda";
+    }
+    
+    if (roleAdmin.includes(roleNormalized)) {
+        if (halamanKembali && 
+            halamanKembali !== "/login" && 
+            !halamanKembali.startsWith("/beranda")) {
+            return halamanKembali;
+        }
+        return "/dashboard";
+    }
+    
+    return "/beranda";
+}
+
+
 function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -32,21 +60,15 @@ function LoginForm() {
                     try {
                         // Ambil profil untuk dapat role user
                         const user = await authService.ambilProfil();
-                        const roleUser = user.role?.toLowerCase();
+                        const halamanKembali = searchParams.get("kembali");
+                        const halamanTujuan = getHalamanTujuanByRole(user.role, halamanKembali);
                         
-                        let halamanTujuan = searchParams.get("kembali");
-                        if (!halamanTujuan) {
-                            if (roleUser === "orang_tua" || roleUser === "ortu" || roleUser === "masyarakat") {
-                                halamanTujuan = "/beranda";
-                            } else {
-                                halamanTujuan = KONFIGURASI_AUTH.HALAMAN_SESUAI_ROLE[roleUser] || KONFIGURASI_AUTH.HALAMAN_DEFAULT;
-                            }
-                        }
-                        
+                        console.log("[Auth Check] Role:", user.role, "-> Redirect ke:", halamanTujuan);
                         router.replace(halamanTujuan);
                         return;
                     } catch {
                         // Token invalid, lanjut ke form login
+                        console.log("[Auth Check] Token invalid, tampilkan form login");
                     }
                 }
             }
@@ -84,23 +106,17 @@ function LoginForm() {
             simpanToken(respon.token);
             tampilkanSukses(PESAN_AUTH.LOGIN_BERHASIL);
 
-            // Tentukan halaman tujuan berdasarkan role
-            const roleUser = respon.user.role?.toLowerCase();
-            let halamanTujuan = searchParams.get("kembali");
+            // Tentukan halaman tujuan berdasarkan role menggunakan helper function
+            const halamanKembali = searchParams.get("kembali");
+            const halamanTujuan = getHalamanTujuanByRole(respon.user.role, halamanKembali);
             
-            // Jika tidak ada halaman kembali, tentukan berdasarkan role
-            if (!halamanTujuan) {
-                if (roleUser === "orang_tua" || roleUser === "ortu" || roleUser === "masyarakat") {
-                    halamanTujuan = "/beranda";
-                } else {
-                    halamanTujuan = KONFIGURASI_AUTH.HALAMAN_SESUAI_ROLE[roleUser] || KONFIGURASI_AUTH.HALAMAN_DEFAULT;
-                }
-            }
+            console.log("[Login] Role:", respon.user.role, "-> Redirect ke:", halamanTujuan);
             
-            // Gunakan window.location untuk redirect yang lebih reliable di production
+            // Gunakan window.location untuk redirect yang lebih reliable
+            // Delay sedikit untuk memastikan token tersimpan
             setTimeout(() => {
                 window.location.href = halamanTujuan;
-            }, 500);
+            }, 300);
         } catch (error) {
             const errorApi = error as ErrorApi;
 

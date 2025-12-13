@@ -57,3 +57,38 @@ export function buatQueryString(
     const query = searchParams.toString();
     return query ? `?${query}` : "";
 }
+
+interface AIPredictionLike {
+    status_gizi?: string;
+    hasil_prediksi?: string;
+}
+
+export function getStatusGizi(prediction?: AIPredictionLike | null, fallback?: string): string {
+    if (!prediction) return fallback || "";
+    return prediction.status_gizi || prediction.hasil_prediksi || fallback || "";
+}
+
+export function formatStatusGizi(status?: string): string {
+    if (!status) return "Belum dianalisis";
+
+    const lower = status.toLowerCase();
+
+    if (lower === "error" || lower === "gagal") {
+        return "⚠️ Terjadi kesalahan saat analisis";
+    }
+    if (lower.includes("baik") || lower.includes("normal") || lower.includes("sehat")) {
+        return "✅ Gizi Baik";
+    }
+    if (lower.includes("kurang") && !lower.includes("sangat")) {
+        return "⚠️ Gizi Kurang";
+    }
+    if (lower.includes("buruk") || lower.includes("stunting") || lower.includes("sangat kurang")) {
+        return "🚨 Gizi Buruk";
+    }
+    if (lower.includes("lebih") || lower.includes("obesitas") || lower.includes("overweight")) {
+        return "⚠️ Gizi Lebih";
+    }
+
+    return status;
+}
+

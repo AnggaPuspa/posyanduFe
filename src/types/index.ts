@@ -83,7 +83,8 @@ export interface ParamPencarian {
 }
 
 export interface AIPrediction {
-    hasil_prediksi: string;
+    status_gizi?: string;
+    hasil_prediksi?: string;
     saran?: string;
     is_verified: boolean;
     z_score_bb_u?: number;

@@ -28,15 +28,39 @@ export function Badge({ variant = "neutral", children, className }: BadgeProps) 
   );
 }
 
-export function StatusBadge({ status }: { status: "normal" | "kuning" | "merah" | string }) {
-  const config: Record<string, { variant: BadgeProps["variant"]; label: string }> = {
-    normal: { variant: "success", label: "Sehat" },
-    hijau: { variant: "success", label: "Normal" },
-    kuning: { variant: "warning", label: "Perlu Perhatian" },
-    merah: { variant: "danger", label: "Berisiko" },
-  };
-  const c = config[status] || config.normal;
-  return <Badge variant={c.variant}>{c.label}</Badge>;
+export function StatusBadge({ status }: { status: string }) {
+  const statusLower = status?.toLowerCase()?.trim() || "";
+  
+  let variant: BadgeProps["variant"] = "success";
+  let label = "Sehat";
+  
+  if (statusLower.includes("buruk") || statusLower.includes("stunting") || statusLower.includes("sangat kurang")) {
+    variant = "danger";
+    label = "Gizi Buruk";
+  } else if (statusLower.includes("kurang")) {
+    variant = "warning";
+    label = "Gizi Kurang";
+  } else if (statusLower.includes("lebih") || statusLower.includes("obesitas") || statusLower.includes("overweight")) {
+    variant = "warning";
+    label = "Gizi Lebih";
+  } else if (statusLower.includes("baik") || statusLower.includes("normal") || statusLower.includes("sehat")) {
+    variant = "success";
+    label = "Gizi Baik";
+  } else if (statusLower === "merah" || statusLower === "berisiko") {
+    variant = "danger";
+    label = "Berisiko";
+  } else if (statusLower === "kuning" || statusLower === "perhatian") {
+    variant = "warning";
+    label = "Perlu Perhatian";
+  } else if (statusLower === "hijau") {
+    variant = "success";
+    label = "Normal";
+  } else if (statusLower.includes("error") || statusLower.includes("gagal")) {
+    variant = "neutral";
+    label = "Error";
+  }
+  
+  return <Badge variant={variant}>{label}</Badge>;
 }
 
 export default Badge;

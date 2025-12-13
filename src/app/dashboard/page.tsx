@@ -168,7 +168,7 @@ function PemeriksaanTerakhirCard({ data, loading }: { data: RecordPemeriksaan[];
                     BB: {item.berat_badan}kg • TB: {item.tinggi_badan}cm
                   </p>
                 </div>
-                <StatusBadge status={item.ai_prediction?.hasil_prediksi === "normal" ? "normal" : item.ai_prediction?.hasil_prediksi === "buruk" ? "merah" : "kuning"} />
+                <StatusBadge status={item.ai_prediction?.status_gizi || item.ai_prediction?.hasil_prediksi || "normal"} />
               </div>
             ))}
           </div>
@@ -254,16 +254,14 @@ export default function DashboardPage() {
         setTotalPemeriksaan(recordResponse.data.total || records.length);
         setPemeriksaanTerakhir(records);
 
-        // Hitung status gizi dari AI prediction
         let giziBaik = 0, giziKurang = 0, stunting = 0;
         records.forEach(r => {
-          const hasil = r.ai_prediction?.hasil_prediksi;
-          if (hasil === "normal") giziBaik++;
-          else if (hasil === "kurang") giziKurang++;
-          else if (hasil === "buruk") stunting++;
+          const status = (r.ai_prediction?.status_gizi || r.ai_prediction?.hasil_prediksi || "").toLowerCase();
+          if (status.includes("baik") || status.includes("normal") || status.includes("sehat")) giziBaik++;
+          else if (status.includes("kurang") && !status.includes("sangat")) giziKurang++;
+          else if (status.includes("buruk") || status.includes("stunting") || status.includes("sangat")) stunting++;
         });
         
-        // Jika tidak ada data AI, hitung dari total
         if (giziBaik + giziKurang + stunting === 0) {
           giziBaik = Math.floor(anakList.length * 0.85);
           giziKurang = Math.floor(anakList.length * 0.10);
