@@ -4,9 +4,10 @@ import { useState, useEffect, useCallback } from "react";
 import { Search, Filter, Plus, Eye, Pencil, Trash2, ChevronLeft, ChevronRight, Baby, Calendar, User, TrendingUp, QrCode, X } from "lucide-react";
 import { Card, CardContent, Button, Input, Avatar, StatusBadge, Modal, Spinner } from "@/components/ui";
 import { GrafikPertumbuhan } from "@/components/charts";
-import { FormTambahAnak, FormTambahKeluarga } from "@/components/forms";
+import { FormTambahAnak, FormEditAnak, FormTambahKeluarga } from "@/components/forms";
 import { childrenService } from "@/services";
 import { pakeToast } from "@/components/providers/toast-provider";
+import { useConfirm } from "@/components/providers/confirm-provider";
 import type { Anak, ResponPaginasi } from "@/types";
 
 function hitungUmur(tanggal: string) {
@@ -29,6 +30,7 @@ function formatTanggal(tanggal: string) {
 
 export default function DataAnakPage() {
   const { tampilkanSukses, tampilkanError } = pakeToast();
+  const { confirmDelete } = useConfirm();
   const [data, setData] = useState<Anak[]>([]);
   const [meta, setMeta] = useState<ResponPaginasi<Anak>["meta"] | null>(null);
   const [sedangMemuat, setSedangMemuat] = useState(true);
@@ -46,6 +48,10 @@ export default function DataAnakPage() {
 
   // Form tambah anak (menggunakan komponen global)
   const [modalTambahAnak, setModalTambahAnak] = useState(false);
+  
+  // Form edit anak
+  const [modalEditAnak, setModalEditAnak] = useState(false);
+  const [anakUntukEdit, setAnakUntukEdit] = useState<Anak | null>(null);
   
   // Form tambah keluarga
   const [modalTambahKeluarga, setModalTambahKeluarga] = useState(false);
@@ -125,15 +131,26 @@ export default function DataAnakPage() {
     setAnakTerpilih(null);
   };
 
-  const hapusAnak = async (anak: Anak) => {
-    if (!confirm(`Yakin ingin menghapus data ${anak.nama_anak}?`)) return;
-    try {
-      await childrenService.hapus(anak.id);
-      tampilkanSukses("Data balita berhasil dihapus");
-      muatData();
-    } catch {
-      tampilkanError("Gagal menghapus data balita");
-    }
+  const bukaEditAnak = (anak: Anak) => {
+    setAnakUntukEdit(anak);
+    setModalEditAnak(true);
+  };
+
+  const tutupEditAnak = () => {
+    setModalEditAnak(false);
+    setAnakUntukEdit(null);
+  };
+
+  const hapusAnak = (anak: Anak) => {
+    confirmDelete(anak.nama_anak, async () => {
+      try {
+        await childrenService.hapus(anak.id);
+        tampilkanSukses("Data balita berhasil dihapus");
+        muatData();
+      } catch {
+        tampilkanError("Gagal menghapus data balita");
+      }
+    });
   };
 
   return (
@@ -168,6 +185,16 @@ export default function DataAnakPage() {
       <FormTambahAnak 
         buka={modalTambahAnak} 
         onTutup={() => setModalTambahAnak(false)}
+        onSukses={() => {
+          muatData();
+        }}
+      />
+
+      {/* Form Edit Anak Modal */}
+      <FormEditAnak 
+        buka={modalEditAnak} 
+        onTutup={tutupEditAnak}
+        anak={anakUntukEdit}
         onSukses={() => {
           muatData();
         }}
@@ -232,6 +259,9 @@ export default function DataAnakPage() {
                       <Button variant="outline" size="sm" className="flex-1 text-xs" onClick={() => bukaQRCode(anak)}>
                         <QrCode className="w-3 h-3 mr-1" /> QR
                       </Button>
+                      <Button variant="outline" size="sm" className="flex-1 text-xs" onClick={() => bukaEditAnak(anak)}>
+                        <Pencil className="w-3 h-3 mr-1" /> Edit
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -273,7 +303,7 @@ export default function DataAnakPage() {
                             <Button variant="ghost" size="sm" className="p-2 text-stone-400 hover:text-purple-500 hover:bg-purple-50" onClick={() => bukaQRCode(anak)}>
                               <QrCode className="w-4 h-4" />
                             </Button>
-                            <Button variant="ghost" size="sm" className="p-2 text-stone-400 hover:text-amber-500 hover:bg-amber-50">
+                            <Button variant="ghost" size="sm" className="p-2 text-stone-400 hover:text-amber-500 hover:bg-amber-50" onClick={() => bukaEditAnak(anak)}>
                               <Pencil className="w-4 h-4" />
                             </Button>
                             <Button variant="ghost" size="sm" className="p-2 text-stone-400 hover:text-rose-500 hover:bg-rose-50" onClick={() => hapusAnak(anak)}>
@@ -392,7 +422,7 @@ export default function DataAnakPage() {
                 <QrCode className="w-4 h-4 mr-2" />
                 Lihat QR
               </Button>
-              <Button className="flex-1">
+              <Button className="flex-1" onClick={() => { tutupModal(); bukaEditAnak(anakTerpilih); }}>
                 <Pencil className="w-4 h-4 mr-2" />
                 Edit Data
               </Button>
