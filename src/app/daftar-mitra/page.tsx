@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { FloatingNav, Footer } from "@/components/layout";
+import { FloatingLoginButton } from "@/components/layout/floating-login";
 import { TermsModal, TransitionLink } from "@/components/ui";
 
 const STORAGE_KEY = "posyandu_mitra_form_draft";
@@ -253,6 +254,7 @@ export default function DaftarMitra() {
     return (
       <main className="min-h-screen bg-stone-50">
         <FloatingNav />
+        <FloatingLoginButton />
         
         <div className="pt-32 pb-20 px-6">
           <div className="max-w-lg mx-auto text-center">
@@ -295,18 +297,20 @@ export default function DaftarMitra() {
   return (
     <main className="min-h-screen bg-stone-50">
       <FloatingNav />
+      <FloatingLoginButton />
 
-      {/* Hero Section - Compact */}
-      <section className="pt-28 pb-8 px-6 bg-white border-b border-stone-100">
-        <div className="max-w-3xl mx-auto text-center">
+      {/* Hero Section - Minimal */}
+      <section className="pt-28 pb-10 px-6 bg-white">
+        <div className="max-w-2xl mx-auto">
+          <p className="text-emerald-600 text-sm font-medium mb-3">Pendaftaran Mitra</p>
           <h1 
-            className="text-2xl md:text-3xl font-bold text-stone-800 mb-2"
+            className="text-2xl md:text-3xl font-bold text-stone-800 mb-3"
             style={{ fontFamily: "var(--font-nunito)" }}
           >
-            Daftar Sebagai Mitra
+            Daftarkan Posyandu Anda
           </h1>
           <p className="text-stone-500">
-            Lengkapi formulir berikut untuk bergabung dengan ekosistem kesehatan digital
+            Isi data berikut untuk bergabung. Gratis, tanpa biaya.
           </p>
         </div>
       </section>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { FloatingNav, Footer } from "@/components/layout";
+import { FloatingLoginButton } from "@/components/layout/floating-login";
 import { TransitionLink } from "@/components/ui";
 
 const partnerCategories = [
@@ -41,6 +42,7 @@ export default function MitraKerjasama() {
   return (
     <main className="min-h-screen bg-white">
       <FloatingNav />
+      <FloatingLoginButton />
       <section className="relative h-screen overflow-hidden bg-black">
         <video
           autoPlay

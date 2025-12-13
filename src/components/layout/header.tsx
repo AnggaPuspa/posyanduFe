@@ -10,7 +10,7 @@ const navLinks = [
   { label: "Beranda", href: "/" },
   { label: "Tentang Kami", href: "/tentang-kami" },
   { label: "Mitra", href: "/mitra-kerjasama" },
-  { label: "Kontak", href: "#kontak" },
+  { label: "Kontak", href: "/kontak" },
 ];
 
 export function FloatingNav() {
@@ -72,16 +72,6 @@ export function FloatingNav() {
             ))}
           </div>
 
-          {/* Divider */}
-          <div className="hidden md:block w-px h-5 bg-stone-200/60" />
-
-          {/* CTA Button - Compact */}
-          <TransitionLink
-            href="/dashboard"
-            className="hidden md:flex items-center px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-semibold shadow-md shadow-emerald-500/20 hover:shadow-lg hover:shadow-emerald-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
-          >
-            Login
-          </TransitionLink>
 
           {/* Mobile Toggle */}
           <button
@@ -115,13 +105,6 @@ export function FloatingNav() {
                 </TransitionLink>
               ))}
             </div>
-            <TransitionLink
-              href="/dashboard"
-              onClick={() => setIsOpen(false)}
-              className="mt-2 flex items-center justify-center px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-semibold shadow-lg shadow-emerald-500/20"
-            >
-              Login Kader
-            </TransitionLink>
           </div>
         </div>
       </nav>

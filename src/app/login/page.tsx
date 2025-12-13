@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect, FormEvent, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Zap, Stethoscope, Users } from "lucide-react";
-import { Spinner } from "@/components/ui";
+import { Spinner, TransitionLink } from "@/components/ui";
 import { authService } from "@/services";
 import { simpanToken } from "@/lib/api-client";
 import { validasiFormLogin, adaErrorValidasi, ErrorValidasiLogin } from "@/lib/validations";
@@ -294,9 +294,9 @@ function LoginForm() {
 
                     <p className="text-center mt-8 text-slate-600">
                         {PESAN_AUTH.BELUM_PUNYA_AKUN}{" "}
-                        <Link href="/daftar" className="text-emerald-600 hover:text-emerald-700 font-semibold">
+                        <TransitionLink href="/daftar-mitra" className="text-emerald-600 hover:text-emerald-700 font-semibold">
                             {PESAN_AUTH.DAFTAR_SEKARANG}
-                        </Link>
+                        </TransitionLink>
                     </p>
                 </div>
             </div>

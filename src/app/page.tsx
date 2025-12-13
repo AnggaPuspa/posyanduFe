@@ -10,6 +10,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Button } from "@/components/ui";
 import { FloatingNav, Footer } from "@/components/layout";
+import { FloatingLoginButton } from "@/components/layout/floating-login";
 
 function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
   const [count, setCount] = useState(0);
@@ -165,6 +166,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-stone-50">
       <FloatingNav />
+      <FloatingLoginButton />
 
       <section id="beranda" className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-stone-50 to-emerald-50" />

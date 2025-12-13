@@ -6,6 +6,7 @@ import { Navigation } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import { FloatingNav, Footer } from "@/components/layout";
+import { FloatingLoginButton } from "@/components/layout/floating-login";
 
 const allAchievements = [
   { year: "2020", title: "Founding Year", capaian: "Platform Posyandu+ resmi diluncurkan", tingkat: "Nasional" },
@@ -41,6 +42,7 @@ export default function TentangKami() {
   return (
     <main className="min-h-screen bg-white">
       <FloatingNav />
+      <FloatingLoginButton />
 
       <section className="relative h-[400px] overflow-hidden">
         <div className="flex h-full">
